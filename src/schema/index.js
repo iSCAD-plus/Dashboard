@@ -30,7 +30,7 @@ const decisionSchema = new Schema({
   date: required(Date),
   numParagraphs: required(Number),
   decisionType: stringEnum(['extend', 'implementation', 'establish', 'exemption', 'intention', 'terminate']),
-  measures: [measureSchema],
+  measures: required([measureSchema]),
 });
 
 const Decision = mongoose.model('Decision', decisionSchema);
