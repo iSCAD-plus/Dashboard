@@ -9,6 +9,7 @@ import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
 import template from './template';
 import routes from '../routes';
+import schemas from '../schema';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = parseInt(KYT.SERVER_PORT, 10);
