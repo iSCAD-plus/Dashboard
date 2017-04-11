@@ -7,9 +7,19 @@ const resolverMap = {
   Query: {
     getDecisions: () => {
       const doc = schemas.decision.find();
-      console.log(doc);
       return doc;
     },
+  },
+
+  Mutation: {
+    createDecision: (_, {decision}) => {
+      console.log('mutation: ' + JSON.stringify(decision));
+      const doc = new schemas.decision(decision);
+      console.log(doc.validateSync());
+      // TODO: use validation to check if we can insert it
+      doc.save();
+      return doc;
+    }
   },
 
   Date: new GraphQLScalarType({

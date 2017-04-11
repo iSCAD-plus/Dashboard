@@ -49,12 +49,12 @@ const graphqlSchema = makeExecutableSchema({
     }
 
     input DecisionInput {
-      decision: String,
-      regime: String,
-      year: Int,
-      date: Date,
-      numParagraphs: Int,
-      decisionType: String
+      decision: String!,
+      regime: String!,
+      year: Int!,
+      date: Date!,
+      numParagraphs: Int!,
+      decisionType: String!
     }
 
     type Decision {
