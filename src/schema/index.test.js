@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 mongoose.connect('localhost', 'iscad-test');
 
 test('Correct documents can be saved', () => {
-  const decision = new schemas.decision({
+  const decision = new schemas.Decision({
     decision: 'Res. 1234',
     regime: 'Fake Country',
     year: 1991,
@@ -14,7 +14,7 @@ test('Correct documents can be saved', () => {
     numParagraphs: 3,
     decisionType: 'extend',
     measures: [{
-      measureCategory: 'Arms Embargo',
+      measureCategory: 'arms embargo',
       measureType: 'establish',
     }],
   });
@@ -25,7 +25,7 @@ test('Correct documents can be saved', () => {
 });
 
 test('Incorrect documents get rejected', () => {
-  const badDecision = new schemas.decision({decision: 3});
+  const badDecision = new schemas.Decision({decision: 3});
 
   const error = badDecision.validateSync();
 
@@ -41,7 +41,7 @@ test('All keys (except measures) are required', () => {
     numParagraphs: 3,
     decisionType: 'extend',
     measures: [{
-      measureCategory: 'Arms Embargo',
+      measureCategory: 'arms embargo',
       measureType: 'establish',
     }],
   };
@@ -53,7 +53,7 @@ test('All keys (except measures) are required', () => {
     var newdoc = Object.assign({}, doc);
     delete newdoc[key];
 
-    const decision = new schemas.decision(newdoc);
+    const decision = new schemas.Decision(newdoc);
     const error = decision.validateSync();
 
     expect(error).toBeTruthy();
@@ -61,7 +61,7 @@ test('All keys (except measures) are required', () => {
 });
 
 test('Empty measures array is accepted', () => {
-  const decision = new schemas.decision({
+  const decision = new schemas.Decision({
     decision: 'Res. 1234',
     regime: 'Fake Country',
     year: 1991,
@@ -94,7 +94,7 @@ test('Any values are accepted', () => {
   const generator = jsc.record(doc);
 
   const property = jsc.forall(generator, function(doc) {
-    const decision = new schemas.decision(doc);
+    const decision = new schemas.Decision(doc);
     return decision.validateSync() === undefined;
   });
 

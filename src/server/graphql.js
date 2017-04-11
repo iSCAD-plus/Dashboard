@@ -1,7 +1,6 @@
-
-import schemas from '../schema';
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
+import schemas from '../schema';
 
 const resolverMap = {
   Query: {
@@ -12,10 +11,8 @@ const resolverMap = {
   },
 
   Mutation: {
-    createDecision: (_, {decision}) => {
-      console.log('mutation: ' + JSON.stringify(decision));
-      const doc = new schemas.decision(decision);
-      console.log(doc.validateSync());
+    createDecision: (_, { decision }) => {
+      const doc = new schemas.Decision(decision);
       // TODO: use validation to check if we can insert it
       doc.save();
       return doc;

@@ -1,14 +1,13 @@
+import { makeExecutableSchema } from 'graphql-tools';
+import resolverMap from '../server/graphql';
 
 const mongoose = require('mongoose');
-const { graphql, buildSchema } = require('graphql');
-import resolverMap from '../server/graphql';
-import { makeExecutableSchema } from 'graphql-tools';
 
 const Schema = mongoose.Schema;
 
 const required = type => ({
   type,
-  required: true
+  required: true,
 });
 
 const stringEnum = values => ({
@@ -20,7 +19,7 @@ const stringEnum = values => ({
   },
 });
 
-const measureCategories = ['drug precursor embargo', 'luxury goods embargo', 'transportation and aviation sanctions', 'diplomatic or overseas representation restrictions', 'chemical and biological weapons embargo', 'arms embargo', 'ban on arms exports by target state', 'financial restrictions', 'public financial support for trade restrictions', 'prohibition of bunkering services', 'travel ban or restrictions', 'business restrictions', 'charcoal ban', 'trade ban on cultural goods', 'asset freeze', 'trade embargo', 'restrictions on ballistic missiles', 'embargo on natural resources', 'non-proliferation measures', 'oil/petroleum embargo']
+const measureCategories = ['drug precursor embargo', 'luxury goods embargo', 'transportation and aviation sanctions', 'diplomatic or overseas representation restrictions', 'chemical and biological weapons embargo', 'arms embargo', 'ban on arms exports by target state', 'financial restrictions', 'public financial support for trade restrictions', 'prohibition of bunkering services', 'travel ban or restrictions', 'business restrictions', 'charcoal ban', 'trade ban on cultural goods', 'asset freeze', 'trade embargo', 'restrictions on ballistic missiles', 'embargo on natural resources', 'non-proliferation measures', 'oil/petroleum embargo'];
 const measureTypes = ['establish', 'modify', 'extend', 'terminate', 'limited extend'];
 const measureSchema = new Schema({
   measureCategory: stringEnum(measureCategories),
@@ -80,13 +79,13 @@ const graphqlSchema = makeExecutableSchema({
 
     scalar Date
   `,
-  resolvers: resolverMap
+  resolvers: resolverMap,
 });
 
 const Decision = mongoose.model('Decision', decisionSchema);
 
 const schemas = {
-  decision: Decision,
+  Decision,
   graphql: graphqlSchema,
 };
 
