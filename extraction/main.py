@@ -61,9 +61,6 @@ for row in range(1, decisionsWorksheet.nrows):
     'measures': measures
   }
 
-  print(json.dumps(body))
-
   req = requests.post('http://localhost:3000/graphql', json={'query': insertQuery, 'variables': {'dec': body}})
   print(req.text)
-
 

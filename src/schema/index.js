@@ -20,7 +20,7 @@ const stringEnum = values => ({
   },
 });
 
-const measureCategories = ['arms embargo', 'trade embargo', 'financial restrictions']; // TODO: put all the categories in
+const measureCategories = ['drug precursor embargo', 'luxury goods embargo', 'transportation and aviation sanctions', 'diplomatic or overseas representation restrictions', 'chemical and biological weapons embargo', 'arms embargo', 'ban on arms exports by target state', 'financial restrictions', 'public financial support for trade restrictions', 'prohibition of bunkering services', 'travel ban or restrictions', 'business restrictions', 'charcoal ban', 'trade ban on cultural goods', 'asset freeze', 'trade embargo', 'restrictions on ballistic missiles', 'embargo on natural resources', 'non-proliferation measures', 'oil/petroleum embargo']
 const measureTypes = ['establish', 'modify', 'extend', 'terminate', 'limited extend'];
 const measureSchema = new Schema({
   measureCategory: stringEnum(measureCategories),
