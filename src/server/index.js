@@ -1,5 +1,6 @@
 
 import express from 'express';
+import graphqlHTTP from 'express-graphql';
 import compression from 'compression';
 import path from 'path';
 import React from 'react';
@@ -23,6 +24,13 @@ app.use(compression());
 
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
+
+// Setup graphql
+app.use('/graphql', graphqlHTTP({
+  schema: schemas.graphql,
+  //rootValue: // TODO
+  graphiql: true // TODO: turn this off for prod
+}));
 
 // Setup server side routing.
 app.get('*', (request, response) => {

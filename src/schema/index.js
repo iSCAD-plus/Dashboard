@@ -70,6 +70,7 @@ const Decision = mongoose.model('Decision', decisionSchema);
 
 const schemas = {
   decision: Decision,
+  graphql: graphqlSchema,
 };
 
 export { measureCategories, measureTypes, decisionTypes };
