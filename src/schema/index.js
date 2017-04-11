@@ -20,7 +20,7 @@ const stringEnum = values => ({
   },
 });
 
-const measureCategories = ['Arms Embargo']; // TODO: put all the categories in
+const measureCategories = ['arms embargo', 'trade embargo', 'financial restrictions']; // TODO: put all the categories in
 const measureTypes = ['establish', 'modify', 'extend', 'terminate', 'limited extend'];
 const measureSchema = new Schema({
   measureCategory: stringEnum(measureCategories),
@@ -54,7 +54,13 @@ const graphqlSchema = makeExecutableSchema({
       year: Int!,
       date: Date!,
       numParagraphs: Int!,
-      decisionType: String!
+      decisionType: String!,
+      measures: [MeasureInput]
+    }
+
+    input MeasureInput {
+      measureType: String,
+      measureCategory: String
     }
 
     type Decision {
@@ -63,7 +69,13 @@ const graphqlSchema = makeExecutableSchema({
       year: Int,
       date: Date,
       numParagraphs: Int,
-      decisionType: String
+      decisionType: String,
+      measures: [Measure]
+    }
+
+    type Measure {
+      measureType: String,
+      measureCategory: String
     }
 
     scalar Date

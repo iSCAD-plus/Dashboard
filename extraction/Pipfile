@@ -4,4 +4,4 @@ verify_ssl = true
 
 [packages]
 xlrd = "*"
-graphene = "*"
+requests = "*"
