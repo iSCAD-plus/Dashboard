@@ -17,27 +17,29 @@ const stringEnum = values => ({
   },
 });
 
-
+const measureCategories = ['Arms Embargo']; // TODO: put all the categories in
+const measureTypes = ['establish', 'modify', 'extend', 'terminate', 'limited extend'];
 const measureSchema = new Schema({
-  measureCategory: stringEnum(['Arms Embargo']), // TODO: put all the categories in
-  measureType: stringEnum(['establish', 'modify', 'extend', 'terminate', 'limited extend']),
+  measureCategory: stringEnum(measureCategories),
+  measureType: stringEnum(measureTypes),
 });
 
+const decisionTypes = ['extend', 'implementation', 'establish', 'exemption', 'intention', 'terminate'];
 const decisionSchema = new Schema({
   decision: required(String),
   regime: required(String),
   year: required(Number),
   date: required(Date),
   numParagraphs: required(Number),
-  decisionType: stringEnum(['extend', 'implementation', 'establish', 'exemption', 'intention', 'terminate']),
-  measures: required([measureSchema]),
+  decisionType: stringEnum(decisionTypes),
+  measures: [measureSchema],
 });
 
 const Decision = mongoose.model('Decision', decisionSchema);
 
 const schemas = {
   decision: Decision,
-}
+};
 
+export { measureCategories, measureTypes, decisionTypes };
 export default schemas;
-
