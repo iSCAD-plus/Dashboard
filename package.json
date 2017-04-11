@@ -12,6 +12,7 @@
     "babel-runtime": "^6.23.0",
     "compression": "1.6.2",
     "express": "4.14.0",
+    "graphql": "^0.9.2",
     "kyt": "^0.5.3",
     "mongoose": "^4.9.4",
     "react": "15.3.0",

@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const { graphql, buildSchema } = require('graphql');
 
 const Schema = mongoose.Schema;
 
@@ -34,6 +35,36 @@ const decisionSchema = new Schema({
   decisionType: stringEnum(decisionTypes),
   measures: [measureSchema],
 });
+
+const graphqlSchema = buildSchema(`
+  type Mutation {
+    createDecision(decision: DecisionInput): Decision
+  }
+
+  type Query {
+    getDecision: Decision
+  }
+
+  input DecisionInput {
+    decision: String,
+    regime: String,
+    year: Int,
+    date: Date,
+    numParagraphs: Int,
+    decisionType: String
+  }
+
+  type Decision {
+    decision: String,
+    regime: String,
+    year: Int,
+    date: Date,
+    numParagraphs: Int,
+    decisionType: String
+  }
+
+  scalar Date
+`);
 
 const Decision = mongoose.model('Decision', decisionSchema);
 
