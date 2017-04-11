@@ -11,6 +11,11 @@ import match from 'react-router/lib/match';
 import template from './template';
 import routes from '../routes';
 import schemas from '../schema';
+import root from './graphql';
+
+const mongoose = require('mongoose');
+
+mongoose.connect('localhost', 'iscad-test'); // TODO: connect to a real db
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = parseInt(KYT.SERVER_PORT, 10);
@@ -28,7 +33,7 @@ app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 // Setup graphql
 app.use('/graphql', graphqlHTTP({
   schema: schemas.graphql,
-  //rootValue: // TODO
+  rootValue: root,
   graphiql: true // TODO: turn this off for prod
 }));
 

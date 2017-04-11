@@ -1,6 +1,8 @@
 
 const mongoose = require('mongoose');
 const { graphql, buildSchema } = require('graphql');
+import resolverMap from '../server/graphql';
+import { makeExecutableSchema } from 'graphql-tools';
 
 const Schema = mongoose.Schema;
 
@@ -36,35 +38,38 @@ const decisionSchema = new Schema({
   measures: [measureSchema],
 });
 
-const graphqlSchema = buildSchema(`
-  type Mutation {
-    createDecision(decision: DecisionInput): Decision
-  }
+const graphqlSchema = makeExecutableSchema({
+  typeDefs: `
+    type Mutation {
+      createDecision(decision: DecisionInput): Decision
+    }
 
-  type Query {
-    getDecision: Decision
-  }
+    type Query {
+      getDecisions: [Decision]
+    }
 
-  input DecisionInput {
-    decision: String,
-    regime: String,
-    year: Int,
-    date: Date,
-    numParagraphs: Int,
-    decisionType: String
-  }
+    input DecisionInput {
+      decision: String,
+      regime: String,
+      year: Int,
+      date: Date,
+      numParagraphs: Int,
+      decisionType: String
+    }
 
-  type Decision {
-    decision: String,
-    regime: String,
-    year: Int,
-    date: Date,
-    numParagraphs: Int,
-    decisionType: String
-  }
+    type Decision {
+      decision: String,
+      regime: String,
+      year: Int,
+      date: Date,
+      numParagraphs: Int,
+      decisionType: String
+    }
 
-  scalar Date
-`);
+    scalar Date
+  `,
+  resolvers: resolverMap
+});
 
 const Decision = mongoose.model('Decision', decisionSchema);
 
