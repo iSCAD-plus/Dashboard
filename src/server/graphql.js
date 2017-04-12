@@ -21,7 +21,9 @@ const resolverMap = {
   Mutation: {
     createDecision: (_, { decision }) => {
       const doc = new schemas.Decision(decision);
-      // TODO: use validation to check if we can insert it
+      if (doc.validateSync()) {
+        // TODO
+      }
       doc.save();
       return doc;
     },
