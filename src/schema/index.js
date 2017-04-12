@@ -53,12 +53,15 @@ const ccrSchema = new Schema({
 const graphqlSchema = makeExecutableSchema({
   typeDefs: `
     type Mutation {
-      createDecision(decision: DecisionInput): Decision
+      createDecision(decision: DecisionInput): Decision,
+      createCCRR(row: CCRRInput): CrossCuttingResearchRow
     }
 
     type Query {
       getDecisions: [Decision],
-      countDecisions: Int
+      countDecisions: Int,
+
+      countCCRR: Int
     }
 
     input DecisionInput {
@@ -74,6 +77,16 @@ const graphqlSchema = makeExecutableSchema({
     input MeasureInput {
       measureType: String,
       measureCategory: String
+    }
+
+    input CCRRInput {
+      table: String!,
+      category: String!,
+      agendaItem: String!,
+      statementType: String!,
+      paragraphId: String!,
+      provision: String!,
+      keywords: [String]
     }
 
     type Decision {

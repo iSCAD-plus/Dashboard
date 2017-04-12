@@ -12,6 +12,10 @@ const resolverMap = {
     countDecisions: () => {
       return schemas.Decision.where({}).count();
     },
+
+    countCCRR: () => {
+      return schemas.CrossCuttingResearchRow.where({}).count();
+    },
   },
 
   Mutation: {
@@ -20,7 +24,14 @@ const resolverMap = {
       // TODO: use validation to check if we can insert it
       doc.save();
       return doc;
-    }
+    },
+
+    createCCRR: (_, { row }) => {
+      const doc = new schemas.CrossCuttingResearchRow(row);
+      // TODO: use validation to check if we can insert it
+      doc.save();
+      return doc;
+    },
   },
 
   Date: new GraphQLScalarType({

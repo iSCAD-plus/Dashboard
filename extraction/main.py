@@ -3,6 +3,9 @@ import xlrd.xldate as xldate
 import json
 import requests
 
+from iscad.extractors.decisions import DecisionsExtractor
+
+decisionsFilename = '/home/nicholas/Clients/UN/data/decisionsDatabaseUnlocked-updated.xlsx'
 decisionsWorkbook = xlrd.open_workbook('/home/nicholas/Clients/UN/data/decisionsDatabaseUnlocked-updated.xlsx')
 
 decisionsWorksheet = decisionsWorkbook.sheet_by_index(0)
@@ -34,19 +37,27 @@ numBad = 0
 numFatalErrors = 0
 numInserted = 0
 
+decisionsExtractor = DecisionsExtractor(decisionsFilename)
+
 for row in range(1, decisionsWorksheet.nrows):
   rowvals = decisionsWorksheet.row_values(row)
 
-  date1 = rowvals[3]
-  date2 = xldate.xldate_as_datetime(rowvals[4], 0).strftime('%d %B %Y')
-  if date2[0] == '0':
-    date2 = date2[1:]
-  if date1 != date2:
-    print('date mismatch in row {row}: {d1} != {d2}'.format(row=row+1, d1=date1, d2=date2))
+  errors = decisionsExtractor.validate_row(rowvals)
+  if len(errors) > 0:
     numBad += 1
-  if rowvals[2] != float(xldate.xldate_as_datetime(rowvals[4],0).year):
-    print('date mismatch in row {row}: {y1} != {y2}'.format(row=row+1, y1=rowvals[2], y2=xldate.xldate_as_datetime(rowvals[4],0).year))
-    numBad += 1
+    for error in errors:
+      (etype, msg) = error
+      print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
+  #date1 = rowvals[3]
+  #date2 = xldate.xldate_as_datetime(rowvals[4], 0).strftime('%d %B %Y')
+  #if date2[0] == '0':
+  #  date2 = date2[1:]
+  #if date1 != date2:
+  #  print('date mismatch in row {row}: {d1} != {d2}'.format(row=row+1, d1=date1, d2=date2))
+  #  numBad += 1
+  #if rowvals[2] != float(xldate.xldate_as_datetime(rowvals[4],0).year):
+  #  print('date mismatch in row {row}: {y1} != {y2}'.format(row=row+1, y1=rowvals[2], y2=xldate.xldate_as_datetime(rowvals[4],0).year))
+  #  numBad += 1
 
   decision = rowvals[0]
   regime = rowvals[1]

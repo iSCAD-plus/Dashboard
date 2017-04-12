@@ -38,3 +38,7 @@ Pipfile.lock
 # OS-specific temporary files
 Thumbs.db
 .DS_Store
+
+# Python runtime files
+__pycache__/
+*.pyc

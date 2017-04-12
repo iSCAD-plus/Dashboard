@@ -124,3 +124,5 @@ test('Any values are accepted for CCRs', () => {
   jsc.assert(property)
 });
 
+// TODO: automated testing of passing payloads through the graphql server
+
