@@ -55,7 +55,7 @@ for row in range(1, decisionsWorksheet.nrows):
     'decision': decision,
     'regime': regime,
     'year': year,
-    'date': date.timestamp(),
+    'date': date.timestamp() * 1000,
     'numParagraphs': numParagraphs,
     'decisionType': decisionType,
     'measures': measures
