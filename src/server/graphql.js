@@ -5,8 +5,12 @@ import schemas from '../schema';
 const resolverMap = {
   Query: {
     getDecisions: () => {
-      const doc = schemas.decision.find();
+      const doc = schemas.Decision.find();
       return doc;
+    },
+
+    countDecisions: () => {
+      return schemas.Decision.where({}).count();
     },
   },
 

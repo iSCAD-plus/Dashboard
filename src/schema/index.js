@@ -44,7 +44,8 @@ const graphqlSchema = makeExecutableSchema({
     }
 
     type Query {
-      getDecisions: [Decision]
+      getDecisions: [Decision],
+      countDecisions: Int
     }
 
     input DecisionInput {
