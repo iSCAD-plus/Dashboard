@@ -1,5 +1,6 @@
 import schemas from '.';
 import { measureCategories, measureTypes, decisionTypes } from '.';
+import { ccrTableNames, ccrCategories, ccrStatementTypes } from '.';
 
 const mongoose = require('mongoose');
 
@@ -76,7 +77,7 @@ test('Empty measures array is accepted', () => {
   expect(error).toBeFalsy();
 });
 
-test('Any values are accepted', () => {
+test('Any values are accepted for Decisions', () => {
   const jsc = require('jsverify');
 
   const doc = {
@@ -99,5 +100,27 @@ test('Any values are accepted', () => {
   });
 
   jsc.assert(property);
+});
+
+test('Any values are accepted for CCRs', () => {
+  const jsc = require('jsverify');
+
+  const doc = {
+    table: jsc.elements(ccrTableNames),
+    category: jsc.elements(ccrCategories),
+    agendaItem: jsc.nestring,
+    statementType: jsc.elements(ccrStatementTypes),
+    paragraphId: jsc.nestring,
+    provision: jsc.nestring,
+    keywords: jsc.array(jsc.nestring),
+  };
+  const generator = jsc.record(doc);
+
+  const property = jsc.forall(generator, function(doc) {
+    const decision = new schemas.CrossCuttingResearchRow(doc);
+    return decision.validateSync() === undefined;
+  });
+
+  jsc.assert(property)
 });
 
