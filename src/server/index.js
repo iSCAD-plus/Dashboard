@@ -1,4 +1,3 @@
-
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import compression from 'compression';
@@ -31,11 +30,14 @@ app.use(compression());
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 // Setup graphql
-app.use('/graphql', graphqlHTTP({
-  schema: schemas.graphql,
-  rootValue: root,
-  graphiql: true // TODO: turn this off for prod
-}));
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schemas.graphql,
+    rootValue: root,
+    graphiql: true, // TODO: turn this off for prod
+  })
+);
 
 // Setup server side routing.
 app.get('*', (request, response) => {
@@ -45,15 +47,20 @@ app.get('*', (request, response) => {
     if (error) {
       response.status(500).send(error.message);
     } else if (redirectLocation) {
-      response.redirect(302, `${redirectLocation.pathname}${redirectLocation.search}`);
+      response.redirect(
+        302,
+        `${redirectLocation.pathname}${redirectLocation.search}`
+      );
     } else if (renderProps) {
       // When a React Router route is matched then we render
       // the components and assets into the template.
-      response.status(200).send(template({
-        root: renderToString(<RouterContext {...renderProps} />),
-        jsBundle: clientAssets.main.js,
-        cssBundle: clientAssets.main.css,
-      }));
+      response.status(200).send(
+        template({
+          root: renderToString(<RouterContext {...renderProps} />),
+          jsBundle: clientAssets.main.js,
+          cssBundle: clientAssets.main.css,
+        })
+      );
     } else {
       response.status(404).send('Not found');
     }

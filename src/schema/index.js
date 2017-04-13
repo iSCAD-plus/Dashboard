@@ -19,14 +19,51 @@ const requiredEnum = values => ({
   },
 });
 
-const measureCategories = ['drug precursor embargo', 'luxury goods embargo', 'transportation and aviation sanctions', 'diplomatic or overseas representation restrictions', 'chemical and biological weapons embargo', 'arms embargo', 'ban on arms exports by target state', 'financial restrictions', 'public financial support for trade restrictions', 'prohibition of bunkering services', 'travel ban or restrictions', 'business restrictions', 'charcoal ban', 'trade ban on cultural goods', 'asset freeze', 'trade embargo', 'restrictions on ballistic missiles', 'embargo on natural resources', 'non-proliferation measures', 'oil/petroleum embargo'];
-const measureTypes = ['establish', 'modify', 'extend', 'terminate', 'limited extend'];
+const measureCategories = [
+  'drug precursor embargo',
+  'luxury goods embargo',
+  'transportation and aviation sanctions',
+  'diplomatic or overseas representation restrictions',
+  'chemical and biological weapons embargo',
+  'arms embargo',
+  'ban on arms exports by target state',
+  'financial restrictions',
+  'public financial support for trade restrictions',
+  'prohibition of bunkering services',
+  'travel ban or restrictions',
+  'business restrictions',
+  'charcoal ban',
+  'trade ban on cultural goods',
+  'asset freeze',
+  'trade embargo',
+  'restrictions on ballistic missiles',
+  'embargo on natural resources',
+  'non-proliferation measures',
+  'oil/petroleum embargo',
+];
+
+const measureTypes = [
+  'establish',
+  'modify',
+  'extend',
+  'terminate',
+  'limited extend',
+];
+
 const measureSchema = new Schema({
   measureCategory: requiredEnum(measureCategories),
   measureType: requiredEnum(measureTypes),
 });
 
-const decisionTypes = ['extend', 'implementation', 'establish', 'exemption', 'intention', 'terminate'];
+const decisionTypes = [
+  'extend',
+  'implementation',
+  'establish',
+  'exemption',
+  'intention',
+  'terminate',
+];
+
 const decisionSchema = new Schema({
   decision: required(String),
   regime: required(String),
@@ -121,7 +158,10 @@ const graphqlSchema = makeExecutableSchema({
 });
 
 const Decision = mongoose.model('Decision', decisionSchema);
-const CrossCuttingResearchRow = mongoose.model('CrossCuttingResearch', ccrSchema);
+const CrossCuttingResearchRow = mongoose.model(
+  'CrossCuttingResearch',
+  ccrSchema
+);
 
 const schemas = {
   Decision,

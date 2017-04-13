@@ -9,13 +9,9 @@ const resolverMap = {
       return doc;
     },
 
-    countDecisions: () => {
-      return schemas.Decision.where({}).count();
-    },
+    countDecisions: () => schemas.Decision.where({}).count(),
 
-    countCCRR: () => {
-      return schemas.CrossCuttingResearchRow.where({}).count();
-    },
+    countCCRR: () => schemas.CrossCuttingResearchRow.where({}).count(),
   },
 
   Mutation: {
@@ -47,12 +43,10 @@ const resolverMap = {
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
         return parseInt(ast.value, 10);
-      } else {
-        return null;
       }
+      return null;
     },
   }),
 };
-
 
 export default resolverMap;
