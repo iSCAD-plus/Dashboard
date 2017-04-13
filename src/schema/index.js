@@ -78,6 +78,7 @@ const ccrCategories = ['thematic', 'country/region'];
 const ccrStatementTypes = ['pp', 'op', 'prst'];
 const ccrSchema = new Schema({
   table: requiredEnum(ccrTableNames),
+  symbol: required(String),
   category: requiredEnum(ccrCategories),
   agendaItem: required(String),
   statementType: requiredEnum(ccrStatementTypes),
@@ -97,7 +98,7 @@ const graphqlSchema = makeExecutableSchema({
       getDecisions: [Decision],
       countDecisions: Int,
 
-      countCCRR: Int
+      countCCRR(table: String): Int
     }
 
     input DecisionInput {
@@ -117,6 +118,7 @@ const graphqlSchema = makeExecutableSchema({
 
     input CCRRInput {
       table: String!,
+      symbol: String!,
       category: String!,
       agendaItem: String!,
       statementType: String!,
@@ -144,6 +146,7 @@ const graphqlSchema = makeExecutableSchema({
 
     type CrossCuttingResearchRow {
       table: String,
+      symbol: String,
       category: String,
       agendaItem: String,
       statementType: String,

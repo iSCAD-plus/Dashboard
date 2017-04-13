@@ -11,7 +11,12 @@ const resolverMap = {
 
     countDecisions: () => schemas.Decision.where({}).count(),
 
-    countCCRR: () => schemas.CrossCuttingResearchRow.where({}).count(),
+    countCCRR: (_, { table }) => {
+      if (table) {
+        return schemas.CrossCuttingResearchRow.where({ table }).count();
+      }
+      return schemas.CrossCuttingResearchRow.where({}).count();
+    },
   },
 
   Mutation: {
