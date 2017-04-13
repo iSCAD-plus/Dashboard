@@ -54,7 +54,7 @@
     "lint": "./node_modules/.bin/eslint . --ext .js --ext .jsx",
     "lint:staged": "./node_modules/.bin/lint-staged",
     "lint:errors": "yarn lint -- --quiet",
-    "lint:nibble": "./node_modules/.bin/eslint-nibble both/ client/ server/",
+    "lint:nibble": "./node_modules/.bin/eslint-nibble src/ mongo/",
     "lint:fix": "yarn lint -- --fix",
     "jest": "./node_modules/.bin/jest",
     "prepush": "yarn jest -- --forceExit",
