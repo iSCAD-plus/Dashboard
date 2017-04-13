@@ -1,7 +1,6 @@
+import mongoose from 'mongoose';
 import { makeExecutableSchema } from 'graphql-tools';
 import resolverMap from '../server/graphql';
-
-const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 

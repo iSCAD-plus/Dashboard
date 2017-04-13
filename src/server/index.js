@@ -1,18 +1,18 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import graphqlHTTP from 'express-graphql';
 import compression from 'compression';
 import path from 'path';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
 import RouterContext from 'react-router/lib/RouterContext';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
+import { renderToString } from 'react-dom/server';
+
 import template from './template';
 import routes from '../routes';
 import schemas from '../schema';
 import root from './graphql';
-
-const mongoose = require('mongoose');
 
 mongoose.connect('localhost', 'iscad-test'); // TODO: connect to a real db
 
