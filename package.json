@@ -57,7 +57,7 @@
     "lint:nibble": "./node_modules/.bin/eslint-nibble both/ client/ server/",
     "lint:fix": "yarn lint -- --fix",
     "jest": "./node_modules/.bin/jest",
-    "prepush": "yarn test",
+    "prepush": "yarn jest -- --forceExit",
     "precommit": "yarn lint:staged",
     "format": "./node_modules/.bin/prettier-eslint \"*(src|mongo)/**/*.js\" --write",
     "kyt:help": "kyt --help"
