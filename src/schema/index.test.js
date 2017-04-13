@@ -1,8 +1,15 @@
-import schemas from '.';
-import { measureCategories, measureTypes, decisionTypes } from '.';
-import { ccrTableNames, ccrCategories, ccrStatementTypes } from '.';
+import R from 'ramda';
+import jsc from 'jsverify';
+import mongoose from 'mongoose';
 
-const mongoose = require('mongoose');
+import schemas, {
+  ccrCategories,
+  ccrStatementTypes,
+  ccrTableNames,
+  decisionTypes,
+  measureCategories,
+  measureTypes,
+} from '.';
 
 mongoose.connect('localhost', 'iscad-test');
 
@@ -14,10 +21,12 @@ test('Correct documents can be saved', () => {
     date: new Date(),
     numParagraphs: 3,
     decisionType: 'extend',
-    measures: [{
-      measureCategory: 'arms embargo',
-      measureType: 'establish',
-    }],
+    measures: [
+      {
+        measureCategory: 'arms embargo',
+        measureType: 'establish',
+      },
+    ],
   });
 
   const error = decision.validateSync();
@@ -26,7 +35,7 @@ test('Correct documents can be saved', () => {
 });
 
 test('Incorrect documents get rejected', () => {
-  const badDecision = new schemas.Decision({decision: 3});
+  const badDecision = new schemas.Decision({ decision: 3 });
 
   const error = badDecision.validateSync();
 
@@ -41,24 +50,24 @@ test('All keys (except measures) are required', () => {
     date: new Date(),
     numParagraphs: 3,
     decisionType: 'extend',
-    measures: [{
-      measureCategory: 'arms embargo',
-      measureType: 'establish',
-    }],
+    measures: [
+      {
+        measureCategory: 'arms embargo',
+        measureType: 'establish',
+      },
+    ],
   };
 
-  for (var key in doc) {
+  Object.keys(doc).forEach((key) => {
     // We don't check 'measures', since it's an array and could be empty
-    if (key === 'measures') continue;
+    if (key === 'measures') return;
 
-    var newdoc = Object.assign({}, doc);
-    delete newdoc[key];
-
+    const newdoc = R.omit([key], doc);
     const decision = new schemas.Decision(newdoc);
     const error = decision.validateSync();
 
     expect(error).toBeTruthy();
-  }
+  });
 });
 
 test('Empty measures array is accepted', () => {
@@ -78,8 +87,6 @@ test('Empty measures array is accepted', () => {
 });
 
 test('Any values are accepted for Decisions', () => {
-  const jsc = require('jsverify');
-
   const doc = {
     decision: jsc.nestring,
     regime: jsc.nestring,
@@ -87,15 +94,17 @@ test('Any values are accepted for Decisions', () => {
     date: jsc.datetime,
     numParagraphs: jsc.nat,
     decisionType: jsc.elements(decisionTypes),
-    measures: jsc.array(jsc.record({
-      measureCategory: jsc.elements(measureCategories),
-      measureType: jsc.elements(measureTypes),
-    })),
+    measures: jsc.array(
+      jsc.record({
+        measureCategory: jsc.elements(measureCategories),
+        measureType: jsc.elements(measureTypes),
+      })
+    ),
   };
   const generator = jsc.record(doc);
 
-  const property = jsc.forall(generator, function(doc) {
-    const decision = new schemas.Decision(doc);
+  const property = jsc.forall(generator, (x) => {
+    const decision = new schemas.Decision(x);
     return decision.validateSync() === undefined;
   });
 
@@ -103,8 +112,6 @@ test('Any values are accepted for Decisions', () => {
 });
 
 test('Any values are accepted for CCRs', () => {
-  const jsc = require('jsverify');
-
   const doc = {
     table: jsc.elements(ccrTableNames),
     symbol: jsc.nestring,
@@ -117,13 +124,12 @@ test('Any values are accepted for CCRs', () => {
   };
   const generator = jsc.record(doc);
 
-  const property = jsc.forall(generator, function(doc) {
-    const decision = new schemas.CrossCuttingResearchRow(doc);
+  const property = jsc.forall(generator, (x) => {
+    const decision = new schemas.CrossCuttingResearchRow(x);
     return decision.validateSync() === undefined;
   });
 
-  jsc.assert(property)
+  jsc.assert(property);
 });
 
 // TODO: automated testing of passing payloads through the graphql server
-
