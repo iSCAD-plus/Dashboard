@@ -35,9 +35,15 @@ for extractor in extractors:
     errors = extractor.validate_row(rowvals)
     if len(errors) > 0:
       numBad += 1
+      isFatal = False
       for error in errors:
         (fatal, etype, msg) = error
         print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
+        if fatal:
+          isFatal = True
+      if isFatal:
+        numFatalErrors += 1
+        continue
 
     body = extractor.process_row(rowvals)
     req = requests.post('http://localhost:3000/graphql', json=body)

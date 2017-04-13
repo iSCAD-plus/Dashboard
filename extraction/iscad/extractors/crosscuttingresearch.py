@@ -40,7 +40,7 @@ class CrossCuttingResearchExtractor(object):
       rowidx = self.current_row
       rowvals = self.worksheet.row_values(rowidx)
       self.current_row += 1
-      yield (rowidx+2, rowvals)
+      yield (rowidx+1, rowvals)
 
   def validate_row(self, values):
 
@@ -52,10 +52,10 @@ class CrossCuttingResearchExtractor(object):
     statement_type = values[4].strip().lower()
 
     if country_regional == thematic:
-      errors.append((False, 'country/regional and thematic are the same', 'country/regional: {a}, thematic: {b}'.format(a=values[1], b=values[2])))
+      errors.append((True, 'country/regional and thematic are the same', 'country/regional: {a}, thematic: {b}'.format(a=values[1], b=values[2])))
 
     if statement_type not in set(['pp', 'op', 'prst']):
-      errors.append((False, 'unrecognized statement type', '"{x}"'.format(x=statement_type)))
+      errors.append((True, 'unrecognized statement type', '"{x}"'.format(x=statement_type)))
 
     return errors
 
