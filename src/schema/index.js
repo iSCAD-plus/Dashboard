@@ -62,7 +62,7 @@ const graphqlSchema = makeExecutableSchema({
       getDecisions: [Decision],
       countDecisions: Int,
 
-      countCCRR: Int
+      countCCRR(table: String): Int
     }
 
     input DecisionInput {

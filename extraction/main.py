@@ -15,49 +15,53 @@ numBad = 0
 numFatalErrors = 0
 numInserted = 0
 
-#extractor = DecisionsExtractor(decisionsFilename)
-#extractor = CrossCuttingResearchExtractor(wpsFilename, 'wps')
-#extractor = CrossCuttingResearchExtractor(caacFilename, 'caac')
-extractor = CrossCuttingResearchExtractor(pocFilename, 'poc')
+extractors = [
+  DecisionsExtractor(decisionsFilename),
+  CrossCuttingResearchExtractor(wpsFilename, 'wps'),
+  CrossCuttingResearchExtractor(caacFilename, 'caac'),
+  CrossCuttingResearchExtractor(pocFilename, 'poc')
+]
 
-expectedRows = extractor.num_expected_inserts()
 
-print('sheet is {rows} x {cols}'.format(rows=extractor.num_rows(), cols=extractor.num_cols()))
-print('expecting to insert {rows}.'.format(rows=expectedRows))
-print()
+for extractor in extractors:
+  expectedRows = extractor.num_expected_inserts()
 
-for row, rowvals in extractor.rows():
-
-  errors = extractor.validate_row(rowvals)
-  if len(errors) > 0:
-    numBad += 1
-    for error in errors:
-      (fatal, etype, msg) = error
-      print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
-
-  body = extractor.process_row(rowvals)
-  req = requests.post('http://localhost:3000/graphql', json=body)
-  if req.status_code != 200:
-    numFatalErrors += 1
-    print('error inserting row {row}'.format(row=row))
-    print(req.text)
-  else:
-    numInserted += 1
-
-req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
-if req.status_code != 200:
-  print('error getting final count')
-  finalCount = 0
-else:
-  finalCount = json.loads(req.text)['data']['countCCRR']
-
-print()
-print('fatal errors in {n} rows'.format(n=numFatalErrors))
-print('successfully inserted {n} rows'.format(n=numInserted))
-print('final count: {finalCount}'.format(finalCount=finalCount))
-
-if finalCount != expectedRows:
+  print('sheet is {rows} x {cols}'.format(rows=extractor.num_rows(), cols=extractor.num_cols()))
+  print('expecting to insert {rows}.'.format(rows=expectedRows))
   print()
-  print('WARNING: wrong number of rows found. did you forget to clear the db before running this?')
+
+  for row, rowvals in extractor.rows():
+
+    errors = extractor.validate_row(rowvals)
+    if len(errors) > 0:
+      numBad += 1
+      for error in errors:
+        (fatal, etype, msg) = error
+        print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
+
+    body = extractor.process_row(rowvals)
+    req = requests.post('http://localhost:3000/graphql', json=body)
+    if req.status_code != 200:
+      numFatalErrors += 1
+      print('error inserting row {row}'.format(row=row))
+      print(req.text)
+    else:
+      numInserted += 1
+
+  req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
+  if req.status_code != 200:
+    print('error getting final count')
+    finalCount = 0
+  else:
+    finalCount = json.loads(req.text)['data'][extractor.count_keyword()]
+
+  print()
+  print('fatal errors in {n} rows'.format(n=numFatalErrors))
+  print('successfully inserted {n} rows'.format(n=numInserted))
+  print('final count: {finalCount}'.format(finalCount=finalCount))
+
+  if finalCount != expectedRows:
+    print()
+    print('WARNING: wrong number of rows found. did you forget to clear the db before running this?')
 
 

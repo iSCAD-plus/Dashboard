@@ -10,8 +10,8 @@ mutation CreateCCRR($row: CCRRInput) {
 """
 
 countQuery = """
-query {
-  countCCRR
+query Count($table: String) {
+  countCCRR(table: $table)
 }
 """
 
@@ -92,7 +92,10 @@ class CrossCuttingResearchExtractor(object):
 
   def count_query(self):
     return {
-      'query': countQuery
+      'query': countQuery,
+      'variables': {
+        'table': self.tablename
+      }
     }
 
   def count_keyword(self):

@@ -13,7 +13,10 @@ const resolverMap = {
       return schemas.Decision.where({}).count();
     },
 
-    countCCRR: () => {
+    countCCRR: (_, { table }) => {
+      if (table) {
+        return schemas.CrossCuttingResearchRow.where({table}).count();
+      }
       return schemas.CrossCuttingResearchRow.where({}).count();
     },
   },
