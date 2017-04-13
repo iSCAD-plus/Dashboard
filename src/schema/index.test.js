@@ -107,6 +107,7 @@ test('Any values are accepted for CCRs', () => {
 
   const doc = {
     table: jsc.elements(ccrTableNames),
+    symbol: jsc.nestring,
     category: jsc.elements(ccrCategories),
     agendaItem: jsc.nestring,
     statementType: jsc.elements(ccrStatementTypes),

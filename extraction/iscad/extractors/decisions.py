@@ -25,8 +25,23 @@ class DecisionsExtractor(object):
     self.worksheet = self.workbook.sheet_by_index(0)
     self.header = self.worksheet.row_values(0)
 
-  def num_expected_rows(self):
+    self.current_row = 1
+
+  def num_expected_inserts(self):
     return self.worksheet.nrows - 1
+
+  def num_rows(self):
+    return self.worksheet.nrows
+
+  def num_cols(self):
+    return self.worksheet.ncols
+
+  def rows(self):
+    while self.current_row < self.num_rows():
+      rowidx = self.current_row
+      rowvals = self.worksheet.row_values(rowidx)
+      self.current_row += 1
+      yield (rowidx+1, rowvals)
 
   def validate_row(self, values):
     date1 = values[3]
@@ -74,4 +89,19 @@ class DecisionsExtractor(object):
       'decisionType': decisionType,
       'measures': measures
     }
+
+    return {
+      'query': insertQuery,
+      'variables': {
+        'dec': body
+      }
+    }
+
+  def count_query(self):
+    return {
+      'query': countQuery,
+    }
+
+  def count_keyword(self):
+    return 'countDecisions'
 

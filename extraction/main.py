@@ -4,65 +4,52 @@ import json
 import requests
 
 from iscad.extractors.decisions import DecisionsExtractor
+from iscad.extractors.crosscuttingresearch import CrossCuttingResearchExtractor
 
 decisionsFilename = '/home/nicholas/Clients/UN/data/decisionsDatabaseUnlocked-updated.xlsx'
-decisionsWorkbook = xlrd.open_workbook('/home/nicholas/Clients/UN/data/decisionsDatabaseUnlocked-updated.xlsx')
-
-decisionsWorksheet = decisionsWorkbook.sheet_by_index(0)
-
-print('sheet is {rows} x {cols}'.format(rows=decisionsWorksheet.nrows, cols=decisionsWorksheet.ncols))
-expectedRows = decisionsWorksheet.nrows - 1
-print('expecting to insert {rows}.'.format(rows=expectedRows))
-print()
-
-header = decisionsWorksheet.row_values(0)
-
-insertQuery = """
-mutation CreateDecision($dec: DecisionInput) {
-  createDecision(decision: $dec) {
-    decision,
-    decisionType,
-    date
-  }
-}
-"""
-
-countQuery = """
-query {
-    countDecisions
-}
-"""
+wpsFilename = '/home/nicholas/Clients/UN/data/wps_cross-cutting.xls'
+caacFilename = '/home/nicholas/Clients/UN/data/caac_cross-cutting.xls'
+pocFilename = '/home/nicholas/Clients/UN/data/poc_cross-cutting.xls'
 
 numBad = 0
 numFatalErrors = 0
 numInserted = 0
 
-decisionsExtractor = DecisionsExtractor(decisionsFilename)
+#extractor = DecisionsExtractor(decisionsFilename)
+#extractor = CrossCuttingResearchExtractor(wpsFilename, 'wps')
+#extractor = CrossCuttingResearchExtractor(caacFilename, 'caac')
+extractor = CrossCuttingResearchExtractor(pocFilename, 'poc')
 
-for row in range(1, decisionsWorksheet.nrows):
-  rowvals = decisionsWorksheet.row_values(row)
+expectedRows = extractor.num_expected_inserts()
 
-  errors = decisionsExtractor.validate_row(rowvals)
+print('sheet is {rows} x {cols}'.format(rows=extractor.num_rows(), cols=extractor.num_cols()))
+print('expecting to insert {rows}.'.format(rows=expectedRows))
+print()
+
+for row, rowvals in extractor.rows():
+
+  errors = extractor.validate_row(rowvals)
   if len(errors) > 0:
     numBad += 1
     for error in errors:
       (fatal, etype, msg) = error
       print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
 
-  body = decisionsExtractor.process_row(rowvals)
-  req = requests.post('http://localhost:3000/graphql', json={'query': insertQuery, 'variables': {'dec': body}})
+  body = extractor.process_row(rowvals)
+  req = requests.post('http://localhost:3000/graphql', json=body)
   if req.status_code != 200:
     numFatalErrors += 1
     print('error inserting row {row}'.format(row=row))
+    print(req.text)
   else:
     numInserted += 1
 
-req = requests.post('http://localhost:3000/graphql', json={'query': countQuery})
+req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
 if req.status_code != 200:
   print('error getting final count')
   finalCount = 0
 else:
-  finalCount = json.loads(req.text)['data']['countDecisions']
+  finalCount = json.loads(req.text)['data']['countCCRR']
 
 print()
 print('fatal errors in {n} rows'.format(n=numFatalErrors))
