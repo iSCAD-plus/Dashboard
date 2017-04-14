@@ -41,25 +41,23 @@ for extractor in extractors:
       isFatal = False
       for error in errors:
         (fatal, etype, msg) = error
-        # TODO: uncomment
-        #print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
+        print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
         if fatal:
           isFatal = True
+      print()
       if isFatal:
         numFatalErrors += 1
         continue
 
     body = extractor.process_row(rowvals)
-    print(len(json.dumps(body)))
     req = requests.post('http://localhost:3000/graphql', json=body)
     if req.status_code != 200:
       numFatalErrors += 1
       print('error inserting row {row}'.format(row=row))
       print(req.text)
+      print()
     else:
       numInserted += 1
-
-    print()
 
   req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
   if req.status_code != 200:

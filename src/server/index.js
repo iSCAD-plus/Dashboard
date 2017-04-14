@@ -36,6 +36,7 @@ app.use(
     schema: schemas.graphql,
     rootValue: root,
     graphiql: true, // TODO: turn this off for prod
+    limit: 200 * 1024,
   })
 );
 

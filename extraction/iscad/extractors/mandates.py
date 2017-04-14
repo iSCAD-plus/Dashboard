@@ -101,14 +101,12 @@ class MandateExtractor(object):
             'component': label
           })
         elif sublabel == '':
-          print(len(excerpts))
           components.append({
             'component': label,
             'resolutions': resolutions,
             'excerpt': excerpts
           })
         else:
-          print(len(excerpts))
           components.append({
             'component': label,
             'subcomponent': sublabel,
