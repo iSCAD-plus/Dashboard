@@ -1,5 +1,20 @@
 import xlrd
 
+insertQuery = """
+mutation CreateMandate($mandate: MandateInput) {
+  createMandate(mandate: $mandate) {
+    name,
+    location
+  }
+}
+"""
+
+countQuery = """
+query Count {
+  countMandates
+}
+"""
+
 class MandateExtractor(object):
 
   def __init__(self, filename):
@@ -34,8 +49,10 @@ class MandateExtractor(object):
     pass # TODO
 
   def count_query(self):
-    pass # TODO
+    return {
+      'query': countQuery
+    }
 
   def count_keyword(self):
-    pass # TODO
+    return 'countMandates'
 
