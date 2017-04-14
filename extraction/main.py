@@ -41,7 +41,8 @@ for extractor in extractors:
       isFatal = False
       for error in errors:
         (fatal, etype, msg) = error
-        print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
+        # TODO: uncomment
+        #print('{etype}, row {row}: {msg}'.format(etype=etype, row=row, msg=msg))
         if fatal:
           isFatal = True
       if isFatal:
@@ -49,6 +50,7 @@ for extractor in extractors:
         continue
 
     body = extractor.process_row(rowvals)
+    print(len(json.dumps(body)))
     req = requests.post('http://localhost:3000/graphql', json=body)
     if req.status_code != 200:
       numFatalErrors += 1

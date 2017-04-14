@@ -95,11 +95,39 @@ const ccrSchema = new Schema({
   keywords: [String],
 });
 
-const mandateComponents = ['foo']; // TODO
-const mandateSubcomponents = ['foo']; // TODO
+const mandateComponents = [
+  'Rule of law (ROL)',
+  'Humanitarian support',
+  'Public information ',
+  'Political process',
+  'Electoral assistance ',
+  'Support to sanctions regimes',
+  'Military and police',
+  'Support to State institutions',
+  'Security sector reform (SSR)',
+  'Authorization of the use of force',
+  'Human rights, women and peace and security, and children and armed conflict',
+  'International cooperation and coordination',
+  'Civilian-military coordination',
+  'Chapter VII ',
+  'Demilitarization and arms management',
+];
+const mandateSubcomponents = [
+  'Judicial matters',
+  'Protection of civilians, including refugees and IDPs',
+  ':DPA-led',
+  'Support to military ',
+  'Ceasefire monitoring ',
+  ':DPKO-led ',
+  'Security monitoring - patrolling - deterrence',
+  'Protection of humanitarian/UN personnel and facilities / free movement of personnel and equipment', // eslint-disable-line max-len
+  'Support to police',
+  'Maritime security',
+];
 const mandateComponentSchema = new Schema({
   component: requiredEnum(mandateComponents),
   subcomponent: optionalEnum(mandateSubcomponents),
+  resolutions: String,
   excerpt: String,
 });
 
@@ -170,6 +198,7 @@ const graphqlSchema = makeExecutableSchema({
     input MandateComponentInput {
       component: String!,
       subcomponent: String,
+      resolutions: String,
       excerpt: String
     }
 

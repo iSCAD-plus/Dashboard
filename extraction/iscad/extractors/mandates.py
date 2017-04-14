@@ -23,8 +23,10 @@ class MandateExtractor(object):
     self.main_worksheet = self.workbook.sheet_by_name('Main Table')
     self.comments_worksheet = self.workbook.sheet_by_name('SCAD Comments (hidden)')
     self.header = self.main_worksheet.col_values(0)
+    self.subheader = self.main_worksheet.col_values(1)
+    self.component_labels = self.header[8:]
+    self.subcomponent_labels = self.subheader[8:]
     self.current_col = 3
-    print(self.header)
 
   def num_expected_inserts(self):
     return self.main_worksheet.ncols - 3
@@ -70,7 +72,12 @@ class MandateExtractor(object):
 
     main, comments = values
     name, location, num_components, lead_entity, original_decision,\
-      subsequent_decisions, last_decision, length, *components = main
+      subsequent_decisions, last_decision, length, *raw_components = main
+    excerpts = comments[8:]
+
+    # TODO: remove this hack
+    if lead_entity == 'DKPO':
+      lead_entity = 'DPKO'
 
     subsequent_decisions = subsequent_decisions.split(',')
     subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
@@ -82,9 +89,32 @@ class MandateExtractor(object):
       currentLength = length.strip()
     else:
       currentLength, datestring = length.split('- expires')
-      print(length, datestring)
       expiration = datetime.datetime.strptime(datestring.strip(), '%d %B %Y')
-      print(datestring, expiration)
+
+    components = []
+
+    for (label, sublabel, resolutions, excerpts) in zip(self.component_labels, self.subcomponent_labels, raw_components, excerpts):
+      resolutions = resolutions.strip()
+      if resolutions != '':
+        if resolutions == 'Yes':
+          components.append({
+            'component': label
+          })
+        elif sublabel == '':
+          print(len(excerpts))
+          components.append({
+            'component': label,
+            'resolutions': resolutions,
+            'excerpt': excerpts
+          })
+        else:
+          print(len(excerpts))
+          components.append({
+            'component': label,
+            'subcomponent': sublabel,
+            'resolutions': resolutions,
+            'excerpt': excerpts
+          })
 
     body = {
       'name': name,
@@ -92,13 +122,12 @@ class MandateExtractor(object):
       'decisions': decisions,
       'currentLength': currentLength,
       'leadEntity': lead_entity,
-      'mandateComponents': [] # TODO
+      'mandateComponents': components,
     }
 
     if expiration is not None:
       body['expiration'] = expiration.timestamp() * 1000
 
-    print(body)
     return {
       'query': insertQuery,
       'variables': {
