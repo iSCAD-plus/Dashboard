@@ -9,6 +9,14 @@ const required = type => ({
   required: true,
 });
 
+const optionalEnum = values => ({
+  type: String,
+  enum: {
+    values,
+    message: 'enum validator failed for path `{PATH}` with value `{VALUE}`.',
+  },
+});
+
 const requiredEnum = values => ({
   type: String,
   required: true,
@@ -85,6 +93,25 @@ const ccrSchema = new Schema({
   paragraphId: required(String),
   provision: required(String),
   keywords: [String],
+});
+
+const mandateComponents = [];
+const mandateSubcomponents = [];
+const mandateComponentSchema = new Schema({
+  component: requiredEnum(mandateComponents),
+  subcomponent: optionalEnum(mandateSubcomponents),
+  excerpt: String,
+});
+
+const leadEntities = ['dpko', 'dpa', 'dpkoau'];
+const mandateSchema = new Schema({
+  name: required(String),
+  location: required(String),
+  decisions: [String],
+  expiration: Date,
+  currentLength: required(String),
+  leadEntity: requiredEnum(leadEntities),
+  mandateComponents: [mandateComponentSchema],
 });
 
 const graphqlSchema = makeExecutableSchema({
@@ -164,10 +191,12 @@ const CrossCuttingResearchRow = mongoose.model(
   'CrossCuttingResearch',
   ccrSchema
 );
+const Mandate = mongoose.model('Mandate', mandateSchema);
 
 const schemas = {
   Decision,
   CrossCuttingResearchRow,
+  Mandate,
   graphql: graphqlSchema,
 };
 
