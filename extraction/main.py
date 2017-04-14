@@ -57,6 +57,8 @@ for extractor in extractors:
     else:
       numInserted += 1
 
+    print()
+
   req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
   if req.status_code != 200:
     print('error getting final count')
@@ -66,6 +68,7 @@ for extractor in extractors:
 
   print()
   print('fatal errors in {n} rows'.format(n=numFatalErrors))
+  print('other errors in {n} rows'.format(n=numBad))
   print('successfully inserted {n} rows'.format(n=numInserted))
   print('final count: {finalCount}'.format(finalCount=finalCount))
 

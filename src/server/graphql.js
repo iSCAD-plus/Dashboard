@@ -40,7 +40,9 @@ const resolverMap = {
 
     createMandate: (_, { mandate }) => {
       const doc = new schemas.Mandate(mandate);
-      if (doc.validateSync()) {
+      const errors = doc.validateSync();
+      if (errors) {
+        console.log(errors);
         // TODO
       }
       doc.save();

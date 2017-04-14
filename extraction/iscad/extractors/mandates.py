@@ -1,10 +1,10 @@
 import xlrd
+import datetime
 
 insertQuery = """
 mutation CreateMandate($mandate: MandateInput) {
   createMandate(mandate: $mandate) {
-    name,
-    location
+    name
   }
 }
 """
@@ -43,18 +43,66 @@ class MandateExtractor(object):
       yield (idx+1, colvals)
 
   def validate_row(self, values):
-    return [] # TODO
+    errors = []
+
+    main, comments = values
+    name, location, num_components, lead_entity, original_decision,\
+      subsequent_decisions, last_decision, length, *components = main
+
+    subsequent_decisions = subsequent_decisions.split(',')
+    subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
+
+    if last_decision.strip() not in subsequent_decisions:
+      errors.append((False, 'last decision not in subsequent decisions',
+        '"{x}" not in [{y}]'.format(x=last_decision, y=', '.join(subsequent_decisions))))
+
+    if original_decision.strip() == '':
+      errors.append((False, 'original decision is empty', ''))
+
+    if location.strip() == '':
+      errors.append((True, 'location may not be empty', ''))
+
+    # TODO: verify num_components
+
+    return errors
 
   def process_row(self, values):
 
     main, comments = values
-    name, location, lead_entity, original_decision,\
+    name, location, num_components, lead_entity, original_decision,\
       subsequent_decisions, last_decision, length, *components = main
 
+    subsequent_decisions = subsequent_decisions.split(',')
+    subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
+
+    decisions = [original_decision.strip()] + list(subsequent_decisions)
+
+    if length.strip() == 'Open-ended':
+      expiration = None
+      currentLength = length.strip()
+    else:
+      currentLength, datestring = length.split('- expires')
+      print(length, datestring)
+      expiration = datetime.datetime.strptime(datestring.strip(), '%d %B %Y')
+      print(datestring, expiration)
+
+    body = {
+      'name': name,
+      'location': location,
+      'decisions': decisions,
+      'currentLength': currentLength,
+      'leadEntity': lead_entity,
+      'mandateComponents': [] # TODO
+    }
+
+    if expiration is not None:
+      body['expiration'] = expiration.timestamp() * 1000
+
+    print(body)
     return {
       'query': insertQuery,
       'variables': {
-        'mandate': {}
+        'mandate': body
       }
     }
 
