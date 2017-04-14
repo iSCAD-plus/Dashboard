@@ -18,14 +18,12 @@ numFatalErrors = 0
 numInserted = 0
 
 extractors = [
-  DecisionsExtractor(decisionsFilename),
-  CrossCuttingResearchExtractor(wpsFilename, 'wps'),
-  CrossCuttingResearchExtractor(caacFilename, 'caac'),
-  CrossCuttingResearchExtractor(pocFilename, 'poc')
+  MandateExtractor(mandateFilename),
+  #DecisionsExtractor(decisionsFilename),
+  #CrossCuttingResearchExtractor(wpsFilename, 'wps'),
+  #CrossCuttingResearchExtractor(caacFilename, 'caac'),
+  #CrossCuttingResearchExtractor(pocFilename, 'poc')
 ]
-
-MandateExtractor(mandateFilename)
-extractors = []
 
 
 for extractor in extractors:

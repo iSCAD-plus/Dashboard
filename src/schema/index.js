@@ -203,7 +203,7 @@ const graphqlSchema = makeExecutableSchema({
 
     type Mandate {
       name: String,
-      locaton: String,
+      location: String,
       decisions: [String],
       expiratoin: Date,
       currentLength: String,

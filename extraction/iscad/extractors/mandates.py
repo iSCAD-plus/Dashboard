@@ -43,10 +43,20 @@ class MandateExtractor(object):
       yield (idx+1, colvals)
 
   def validate_row(self, values):
-    pass # TODO
+    return [] # TODO
 
   def process_row(self, values):
-    pass # TODO
+
+    main, comments = values
+    name, location, lead_entity, original_decision,\
+      subsequent_decisions, last_decision, length, *components = main
+
+    return {
+      'query': insertQuery,
+      'variables': {
+        'mandate': {}
+      }
+    }
 
   def count_query(self):
     return {
