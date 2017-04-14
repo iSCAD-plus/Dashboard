@@ -95,8 +95,8 @@ const ccrSchema = new Schema({
   keywords: [String],
 });
 
-const mandateComponents = [];
-const mandateSubcomponents = [];
+const mandateComponents = ['foo']; // TODO
+const mandateSubcomponents = ['foo']; // TODO
 const mandateComponentSchema = new Schema({
   component: requiredEnum(mandateComponents),
   subcomponent: optionalEnum(mandateSubcomponents),
@@ -118,14 +118,17 @@ const graphqlSchema = makeExecutableSchema({
   typeDefs: `
     type Mutation {
       createDecision(decision: DecisionInput): Decision,
-      createCCRR(row: CCRRInput): CrossCuttingResearchRow
+      createCCRR(row: CCRRInput): CrossCuttingResearchRow,
+      createMandate(mandate: MandateInput): Mandate
     }
 
     type Query {
       getDecisions: [Decision],
       countDecisions: Int,
 
-      countCCRR(table: String): Int
+      countCCRR(table: String): Int,
+
+      countMandates: Int
     }
 
     input DecisionInput {
@@ -152,6 +155,22 @@ const graphqlSchema = makeExecutableSchema({
       paragraphId: String!,
       provision: String!,
       keywords: [String]
+    }
+
+    input MandateInput {
+      name: String!,
+      location: String!,
+      decisions: [String],
+      expiratoin: Date,
+      currentLength: String!,
+      leadEntity: String!,
+      mandateComponents: [MandateComponentInput]
+    }
+
+    input MandateComponentInput {
+      component: String!,
+      subcomponent: String,
+      excerpt: String
     }
 
     type Decision {
@@ -182,6 +201,21 @@ const graphqlSchema = makeExecutableSchema({
       keywords: [String]
     }
 
+    type Mandate {
+      name: String,
+      locaton: String,
+      decisions: [String],
+      expiratoin: Date,
+      currentLength: String,
+      leadEntity: String,
+      mandateComponents: [MandateComponent]
+    }
+
+    type MandateComponent {
+      component: String,
+      subcomponent: String,
+      excerpt: String
+    }
   `,
   resolvers: resolverMap,
 });
@@ -202,4 +236,5 @@ const schemas = {
 
 export { measureCategories, measureTypes, decisionTypes };
 export { ccrTableNames, ccrCategories, ccrStatementTypes };
+export { leadEntities, mandateComponents, mandateSubcomponents };
 export default schemas;

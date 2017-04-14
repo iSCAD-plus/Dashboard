@@ -7,6 +7,9 @@ import schemas, {
   ccrStatementTypes,
   ccrTableNames,
   decisionTypes,
+  leadEntities,
+  mandateComponents,
+  mandateSubcomponents,
   measureCategories,
   measureTypes,
 } from '.';
@@ -126,6 +129,32 @@ test('Any values are accepted for CCRs', () => {
 
   const property = jsc.forall(generator, (x) => {
     const decision = new schemas.CrossCuttingResearchRow(x);
+    return decision.validateSync() === undefined;
+  });
+
+  jsc.assert(property);
+});
+
+test('Any values are accepted for mandates', () => {
+  const doc = {
+    name: jsc.nestring,
+    location: jsc.nestring,
+    decisions: jsc.array(jsc.nestring),
+    expiration: jsc.datetime,
+    currentLength: jsc.nestring,
+    leadEntity: jsc.elements(leadEntities),
+    mandateComponents: jsc.array(
+      jsc.record({
+        component: jsc.elements(mandateComponents),
+        subcomponent: jsc.elements(mandateSubcomponents),
+        excerpt: jsc.nestring,
+      })
+    ),
+  };
+  const generator = jsc.record(doc);
+
+  const property = jsc.forall(generator, (x) => {
+    const decision = new schemas.Mandate(x);
     return decision.validateSync() === undefined;
   });
 

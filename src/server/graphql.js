@@ -17,6 +17,8 @@ const resolverMap = {
       }
       return schemas.CrossCuttingResearchRow.where({}).count();
     },
+
+    countMandates: () => schemas.Mandate.where({}).count(),
   },
 
   Mutation: {
@@ -32,6 +34,15 @@ const resolverMap = {
     createCCRR: (_, { row }) => {
       const doc = new schemas.CrossCuttingResearchRow(row);
       // TODO: use validation to check if we can insert it
+      doc.save();
+      return doc;
+    },
+
+    createMandate: (_, { mandate }) => {
+      const doc = new schemas.Mandate(mandate);
+      if (doc.validateSync()) {
+        // TODO
+      }
       doc.save();
       return doc;
     },
