@@ -7,11 +7,11 @@ from iscad.extractors.decisions import DecisionsExtractor
 from iscad.extractors.crosscuttingresearch import CrossCuttingResearchExtractor
 from iscad.extractors.mandates import MandateExtractor
 
-decisionsFilename = '/home/nicholas/Clients/UN/data/decisionsDatabaseUnlocked-updated.xlsx'
-wpsFilename = '/home/nicholas/Clients/UN/data/wps_cross-cutting.xls'
-caacFilename = '/home/nicholas/Clients/UN/data/caac_cross-cutting.xls'
-pocFilename = '/home/nicholas/Clients/UN/data/poc_cross-cutting.xls'
-mandateFilename = '/home/nicholas/Clients/UN/data/mandate_table_internal.xlsx'
+decisionsFilename = './data/decisionsDatabaseUnlocked-updated.xlsx'
+wpsFilename = './data/wps_cross-cutting.xls'
+caacFilename = './data/caac_cross-cutting.xls'
+pocFilename = './data/poc_cross-cutting.xls'
+mandateFilename = './data/mandate_table_internal.xlsx'
 
 extractors = [
   MandateExtractor(mandateFilename),
