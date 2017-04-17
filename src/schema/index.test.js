@@ -139,7 +139,9 @@ test('Any values are accepted for mandates', () => {
   const doc = {
     name: jsc.nestring,
     location: jsc.nestring,
-    decisions: jsc.array(jsc.nestring),
+    originalDecision: jsc.nestring,
+    subsequentDecisions: jsc.array(jsc.nestring),
+    latestDecision: jsc.nestring,
     expiration: jsc.datetime,
     currentLength: jsc.nestring,
     leadEntity: jsc.elements(leadEntities),

@@ -134,8 +134,10 @@ const mandateComponentSchema = new Schema({
 const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
 const mandateSchema = new Schema({
   name: required(String),
-  location: required(String),
-  decisions: [String],
+  location: String,
+  originalDecision: required(String),
+  subsequentDecisions: [String],
+  latestDecision: String,
   expiration: Date,
   currentLength: required(String),
   leadEntity: requiredEnum(leadEntities),
@@ -187,8 +189,10 @@ const graphqlSchema = makeExecutableSchema({
 
     input MandateInput {
       name: String!,
-      location: String!,
-      decisions: [String],
+      location: String,
+      originalDecision: String!,
+      subsequentDecisions: [String],
+      latestDecision: String,
       expiration: Date,
       currentLength: String!,
       leadEntity: String!,

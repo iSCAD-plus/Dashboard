@@ -13,20 +13,20 @@ caacFilename = '/home/nicholas/Clients/UN/data/caac_cross-cutting.xls'
 pocFilename = '/home/nicholas/Clients/UN/data/poc_cross-cutting.xls'
 mandateFilename = '/home/nicholas/Clients/UN/data/mandate_table_internal.xlsx'
 
-numBad = 0
-numFatalErrors = 0
-numInserted = 0
-
 extractors = [
   MandateExtractor(mandateFilename),
-  #DecisionsExtractor(decisionsFilename),
-  #CrossCuttingResearchExtractor(wpsFilename, 'wps'),
-  #CrossCuttingResearchExtractor(caacFilename, 'caac'),
-  #CrossCuttingResearchExtractor(pocFilename, 'poc')
+  DecisionsExtractor(decisionsFilename),
+  CrossCuttingResearchExtractor(wpsFilename, 'wps'),
+  CrossCuttingResearchExtractor(caacFilename, 'caac'),
+  CrossCuttingResearchExtractor(pocFilename, 'poc')
 ]
 
 
 for extractor in extractors:
+  numBad = 0
+  numFatalErrors = 0
+  numInserted = 0
+
   expectedRows = extractor.num_expected_inserts()
 
   print('sheet is {rows} x {cols}'.format(rows=extractor.num_rows(), cols=extractor.num_cols()))

@@ -54,15 +54,8 @@ class MandateExtractor(object):
     subsequent_decisions = subsequent_decisions.split(',')
     subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
 
-    if last_decision.strip() not in subsequent_decisions:
-      errors.append((False, 'last decision not in subsequent decisions',
-        '"{x}" not in [{y}]'.format(x=last_decision, y=', '.join(subsequent_decisions))))
-
     if original_decision.strip() == '':
       errors.append((False, 'original decision is empty', ''))
-
-    if location.strip() == '':
-      errors.append((True, 'location may not be empty', ''))
 
     # TODO: verify num_components
 
@@ -80,9 +73,10 @@ class MandateExtractor(object):
       lead_entity = 'DPKO'
 
     subsequent_decisions = subsequent_decisions.split(',')
-    subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
+    subsequent_decisions = list(map(lambda x: x.strip(), subsequent_decisions))
 
-    decisions = [original_decision.strip()] + list(subsequent_decisions)
+    original_decision = original_decision.strip()
+    last_decision = last_decision.strip()
 
     if length.strip() == 'Open-ended':
       expiration = None
@@ -117,7 +111,9 @@ class MandateExtractor(object):
     body = {
       'name': name,
       'location': location,
-      'decisions': decisions,
+      'originalDecision': original_decision,
+      'subsequentDecisions': subsequent_decisions,
+      'latestDecision': last_decision,
       'currentLength': currentLength,
       'leadEntity': lead_entity,
       'mandateComponents': components,
