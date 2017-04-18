@@ -145,6 +145,7 @@ test('Any values are accepted for mandates', () => {
     expiration: jsc.datetime,
     currentLength: jsc.nestring,
     leadEntity: jsc.elements(leadEntities),
+    chapterVII: jsc.bool,
     mandateComponents: jsc.array(
       jsc.record({
         component: jsc.elements(mandateComponents),

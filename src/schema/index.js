@@ -105,12 +105,11 @@ const mandateComponents = [
   'Military and police',
   'Support to State institutions',
   'Security sector reform (SSR)',
-  'Authorization of the use of force',
   'Human rights, women and peace and security, and children and armed conflict',
   'International cooperation and coordination',
   'Civilian-military coordination',
-  'Chapter VII',
   'Demilitarization and arms management',
+  'Authorization of the use of force',
 ];
 const mandateSubcomponents = [
   'Judicial matters',
@@ -141,6 +140,8 @@ const mandateSchema = new Schema({
   expiration: Date,
   currentLength: required(String),
   leadEntity: requiredEnum(leadEntities),
+  chapterVII: required(Boolean),
+  authorizationOfUseOfForce: mandateComponentSchema,
   mandateComponents: [mandateComponentSchema],
 });
 
@@ -196,6 +197,8 @@ const graphqlSchema = makeExecutableSchema({
       expiration: Date,
       currentLength: String!,
       leadEntity: String!,
+      chapterVII: Boolean!,
+      authorizationOfUseOfForce: MandateComponentInput,
       mandateComponents: [MandateComponentInput]
     }
 

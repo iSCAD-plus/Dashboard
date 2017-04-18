@@ -24,8 +24,8 @@ class MandateExtractor(object):
     self.comments_worksheet = self.workbook.sheet_by_name('SCAD Comments (hidden)')
     self.header = self.main_worksheet.col_values(0)
     self.subheader = self.main_worksheet.col_values(1)
-    self.component_labels = self.header[8:]
-    self.subcomponent_labels = self.subheader[8:]
+    self.component_labels = self.header[10:]
+    self.subcomponent_labels = self.subheader[10:]
     self.current_col = 3
 
   def num_expected_inserts(self):
@@ -49,7 +49,8 @@ class MandateExtractor(object):
 
     main, comments = values
     name, location, num_components, lead_entity, original_decision,\
-      subsequent_decisions, last_decision, length, *components = main
+      subsequent_decisions, last_decision, length, chaptervii, authforce,\
+      *components = main
 
     subsequent_decisions = subsequent_decisions.split(',')
     subsequent_decisions = map(lambda x: x.strip(), subsequent_decisions)
@@ -57,7 +58,8 @@ class MandateExtractor(object):
     if original_decision.strip() == '':
       errors.append((False, 'original decision is empty', ''))
 
-    # TODO: verify num_components
+    if num_components != len(list(filter(None, components))):
+      errors.append((False, 'num_components doesn\'t match', '{x} != {y}'.format(x=num_components, y=len(list(filter(None, components))))))
 
     return errors
 
@@ -65,8 +67,9 @@ class MandateExtractor(object):
 
     main, comments = values
     name, location, num_components, lead_entity, original_decision,\
-      subsequent_decisions, last_decision, length, *raw_components = main
-    excerpts = comments[8:]
+      subsequent_decisions, last_decision, length, chaptervii, force_auth,\
+      *raw_components = main
+    chaptervii_ex, force_auth_ex, *excerpts = comments[8:]
 
     # TODO: remove this hack
     if lead_entity == 'DKPO':
@@ -117,10 +120,18 @@ class MandateExtractor(object):
       'currentLength': currentLength,
       'leadEntity': lead_entity,
       'mandateComponents': components,
+      'chapterVII': (chaptervii.strip() == 'Yes'),
     }
 
     if expiration is not None:
       body['expiration'] = expiration.timestamp() * 1000
+
+    if force_auth.strip() != '':
+      body['authorizationOfUseOfForce'] = {
+        'component': 'Authorization of the use of force',
+        'resolutions': force_auth.strip(),
+        'excerpt': force_auth_ex.strip()
+      }
 
     return {
       'query': insertQuery,
