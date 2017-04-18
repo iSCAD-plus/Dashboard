@@ -4,25 +4,29 @@ import schemas from '../schema';
 
 const resolverMap = {
   Query: {
-    getDecisions: () => {
+    getDecisions() {
       const doc = schemas.Decision.find();
       return doc;
     },
 
-    countDecisions: () => schemas.Decision.where({}).count(),
+    countDecisions() {
+      return schemas.Decision.where({}).count();
+    },
 
-    countCCRR: (_, { table }) => {
+    countCCRR(_, { table }) {
       if (table) {
         return schemas.CrossCuttingResearchRow.where({ table }).count();
       }
       return schemas.CrossCuttingResearchRow.where({}).count();
     },
 
-    countMandates: () => schemas.Mandate.where({}).count(),
+    countMandates() {
+      return schemas.Mandate.where({}).count();
+    },
   },
 
   Mutation: {
-    createDecision: (_, { decision }) => {
+    createDecision(_, { decision }) {
       const doc = new schemas.Decision(decision);
       if (doc.validateSync()) {
         // TODO
@@ -31,14 +35,14 @@ const resolverMap = {
       return doc;
     },
 
-    createCCRR: (_, { row }) => {
+    createCCRR(_, { row }) {
       const doc = new schemas.CrossCuttingResearchRow(row);
       // TODO: use validation to check if we can insert it
       doc.save();
       return doc;
     },
 
-    createMandate: (_, { mandate }) => {
+    createMandate(_, { mandate }) {
       const doc = new schemas.Mandate(mandate);
       const errors = doc.validateSync();
       if (errors) {

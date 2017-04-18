@@ -26,7 +26,7 @@ const requiredEnum = values => ({
   },
 });
 
-const measureCategories = [
+export const measureCategories = [
   'drug precursor embargo',
   'luxury goods embargo',
   'transportation and aviation sanctions',
@@ -49,7 +49,7 @@ const measureCategories = [
   'oil/petroleum embargo',
 ];
 
-const measureTypes = [
+export const measureTypes = [
   'establish',
   'modify',
   'extend',
@@ -62,7 +62,7 @@ const measureSchema = new Schema({
   measureType: requiredEnum(measureTypes),
 });
 
-const decisionTypes = [
+export const decisionTypes = [
   'extend',
   'implementation',
   'establish',
@@ -81,9 +81,9 @@ const decisionSchema = new Schema({
   measures: [measureSchema],
 });
 
-const ccrTableNames = ['wps', 'caac', 'poc'];
-const ccrCategories = ['thematic', 'country/region'];
-const ccrStatementTypes = ['pp', 'op', 'prst'];
+export const ccrTableNames = ['wps', 'caac', 'poc'];
+export const ccrCategories = ['thematic', 'country/region'];
+export const ccrStatementTypes = ['pp', 'op', 'prst'];
 const ccrSchema = new Schema({
   table: requiredEnum(ccrTableNames),
   symbol: required(String),
@@ -95,7 +95,7 @@ const ccrSchema = new Schema({
   keywords: [String],
 });
 
-const mandateComponents = [
+export const mandateComponents = [
   'Rule of law (ROL)',
   'Humanitarian support',
   'Public information',
@@ -111,7 +111,8 @@ const mandateComponents = [
   'Demilitarization and arms management',
   'Authorization of the use of force',
 ];
-const mandateSubcomponents = [
+
+export const mandateSubcomponents = [
   'Judicial matters',
   'Protection of civilians, including refugees and IDPs',
   ':DPA-led',
@@ -130,7 +131,7 @@ const mandateComponentSchema = new Schema({
   excerpt: String,
 });
 
-const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
+export const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
 const mandateSchema = new Schema({
   name: required(String),
   location: String,
@@ -270,7 +271,4 @@ const schemas = {
   graphql: graphqlSchema,
 };
 
-export { measureCategories, measureTypes, decisionTypes };
-export { ccrTableNames, ccrCategories, ccrStatementTypes };
-export { leadEntities, mandateComponents, mandateSubcomponents };
 export default schemas;
