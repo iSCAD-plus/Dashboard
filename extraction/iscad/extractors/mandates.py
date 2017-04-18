@@ -92,18 +92,18 @@ class MandateExtractor(object):
       if resolutions != '':
         if resolutions == 'Yes':
           components.append({
-            'component': label
+            'component': label.strip()
           })
         elif sublabel == '':
           components.append({
-            'component': label,
+            'component': label.strip(),
             'resolutions': resolutions,
             'excerpt': excerpts
           })
         else:
           components.append({
-            'component': label,
-            'subcomponent': sublabel,
+            'component': label.strip(),
+            'subcomponent': sublabel.strip(),
             'resolutions': resolutions,
             'excerpt': excerpts
           })

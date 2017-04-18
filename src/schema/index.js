@@ -98,9 +98,9 @@ const ccrSchema = new Schema({
 const mandateComponents = [
   'Rule of law (ROL)',
   'Humanitarian support',
-  'Public information ',
+  'Public information',
   'Political process',
-  'Electoral assistance ',
+  'Electoral assistance',
   'Support to sanctions regimes',
   'Military and police',
   'Support to State institutions',
@@ -109,16 +109,16 @@ const mandateComponents = [
   'Human rights, women and peace and security, and children and armed conflict',
   'International cooperation and coordination',
   'Civilian-military coordination',
-  'Chapter VII ',
+  'Chapter VII',
   'Demilitarization and arms management',
 ];
 const mandateSubcomponents = [
   'Judicial matters',
   'Protection of civilians, including refugees and IDPs',
   ':DPA-led',
-  'Support to military ',
-  'Ceasefire monitoring ',
-  ':DPKO-led ',
+  'Support to military',
+  'Ceasefire monitoring',
+  ':DPKO-led',
   'Security monitoring - patrolling - deterrence',
   'Protection of humanitarian/UN personnel and facilities / free movement of personnel and equipment', // eslint-disable-line max-len
   'Support to police',
