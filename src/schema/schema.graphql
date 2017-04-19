@@ -8,10 +8,9 @@ type Mutation {
 type Query {
   getDecisions: [Decision],
   countDecisions: Int,
-
   countCCRR(table: String): Int,
-
-  countMandates: Int
+  countMandates: Int,
+  decisionQuery: [DecisionQueryResult]
 }
 
 input DecisionInput {
@@ -71,9 +70,20 @@ type Decision {
   measures: [Measure]
 }
 
+type DecisionQueryResult {
+  regime: String,
+  year: Int,
+  month: Int,
+  numParagraphs: Int,
+  decisionType: String,
+  measureType: String,
+  measureCategory: String,
+  count: Int
+}
+
 type Measure {
-  measureType: String, # TODO: rename
-  measureCategory: String # TODO: rename
+  measureType: String,
+  measureCategory: String
 }
 
 scalar DateTime
