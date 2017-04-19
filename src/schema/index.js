@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { makeExecutableSchema } from 'graphql-tools';
 import resolverMap from '../server/graphql';
+import schema from './schema.graphql';
 
 const Schema = mongoose.Schema;
 
@@ -147,113 +148,7 @@ const mandateSchema = new Schema({
 });
 
 const graphqlSchema = makeExecutableSchema({
-  typeDefs: `
-    type Mutation {
-      createDecision(decision: DecisionInput): Decision,
-      createCCRR(row: CCRRInput): CrossCuttingResearchRow,
-      createMandate(mandate: MandateInput): Mandate
-    }
-
-    type Query {
-      getDecisions: [Decision],
-      countDecisions: Int,
-
-      countCCRR(table: String): Int,
-
-      countMandates: Int
-    }
-
-    input DecisionInput {
-      decision: String!,
-      regime: String!,
-      year: Int!,
-      date: Date!,
-      numParagraphs: Int!,
-      decisionType: String!,
-      measures: [MeasureInput]
-    }
-
-    input MeasureInput {
-      measureType: String,
-      measureCategory: String
-    }
-
-    input CCRRInput {
-      table: String!,
-      symbol: String!,
-      category: String!,
-      agendaItem: String!,
-      statementType: String!,
-      paragraphId: String!,
-      provision: String!,
-      keywords: [String]
-    }
-
-    input MandateInput {
-      name: String!,
-      location: String,
-      originalDecision: String!,
-      subsequentDecisions: [String],
-      latestDecision: String,
-      expiration: Date,
-      currentLength: String!,
-      leadEntity: String!,
-      chapterVII: Boolean!,
-      authorizationOfUseOfForce: MandateComponentInput,
-      mandateComponents: [MandateComponentInput]
-    }
-
-    input MandateComponentInput {
-      component: String!,
-      subcomponent: String,
-      resolutions: String,
-      excerpt: String
-    }
-
-    type Decision {
-      decision: String,
-      regime: String,
-      year: Int,
-      date: Date,
-      numParagraphs: Int,
-      decisionType: String,
-      measures: [Measure]
-    }
-
-    type Measure {
-      measureType: String, # TODO: rename
-      measureCategory: String # TODO: rename
-    }
-
-    scalar Date
-
-    type CrossCuttingResearchRow {
-      table: String,
-      symbol: String,
-      category: String,
-      agendaItem: String,
-      statementType: String,
-      paragraphId: String,
-      provision: String,
-      keywords: [String]
-    }
-
-    type Mandate {
-      name: String,
-      location: String,
-      decisions: [String],
-      expiration: Date,
-      currentLength: String,
-      leadEntity: String,
-      mandateComponents: [MandateComponent]
-    }
-
-    type MandateComponent {
-      component: String,
-      subcomponent: String,
-      excerpt: String
-    }
-  `,
+  typeDefs: [schema],
   resolvers: resolverMap,
 });
 
