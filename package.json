@@ -58,7 +58,7 @@
     "lint:nibble": "./node_modules/.bin/eslint-nibble src/ mongo/",
     "lint:fix": "yarn lint -- --fix",
     "jest": "./node_modules/.bin/jest",
-    "prepush": "yarn jest -- --forceExit",
+    "prepush": "yarn test",
     "precommit": "yarn lint:staged",
     "format": "./node_modules/.bin/prettier-eslint \"*(src|mongo)/**/*.js\" --write",
     "kyt:help": "kyt --help"
