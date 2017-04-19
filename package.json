@@ -50,7 +50,7 @@
     "build": "kyt build",
     "start": "node build/server/main.js",
     "proto": "kyt proto",
-    "test": "yarn jest",
+    "test": "yarn jest -- --forceExit",
     "test:watch": "yarn jest -- --watch",
     "lint": "./node_modules/.bin/eslint ./src --ext .js",
     "lint:staged": "./node_modules/.bin/lint-staged",
