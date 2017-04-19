@@ -18,7 +18,7 @@ input DecisionInput {
   decision: String!,
   regime: String!,
   year: Int!,
-  date: Date!,
+  date: DateTime!,
   numParagraphs: Int!,
   decisionType: String!,
   measures: [MeasureInput]
@@ -46,7 +46,7 @@ input MandateInput {
   originalDecision: String!,
   subsequentDecisions: [String],
   latestDecision: String,
-  expiration: Date,
+  expiration: DateTime,
   currentLength: String!,
   leadEntity: String!,
   chapterVII: Boolean!,
@@ -65,7 +65,7 @@ type Decision {
   decision: String,
   regime: String,
   year: Int,
-  date: Date,
+  date: DateTime,
   numParagraphs: Int,
   decisionType: String,
   measures: [Measure]
@@ -76,7 +76,7 @@ type Measure {
   measureCategory: String # TODO: rename
 }
 
-scalar Date
+scalar DateTime
 
 type CrossCuttingResearchRow {
   table: String,
@@ -93,7 +93,7 @@ type Mandate {
   name: String,
   location: String,
   decisions: [String],
-  expiration: Date,
+  expiration: DateTime,
   currentLength: String,
   leadEntity: String,
   mandateComponents: [MandateComponent]

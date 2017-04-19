@@ -84,7 +84,7 @@ class DecisionsExtractor(object):
       'decision': decision,
       'regime': regime,
       'year': year,
-      'date': date.timestamp() * 1000,
+      'date': str(date),
       'numParagraphs': numParagraphs,
       'decisionType': decisionType,
       'measures': measures

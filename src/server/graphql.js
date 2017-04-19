@@ -53,7 +53,7 @@ const resolverMap = {
     },
   },
 
-  Date: GraphQLDateTime,
+  DateTime: GraphQLDateTime,
 };
 
 export default resolverMap;
