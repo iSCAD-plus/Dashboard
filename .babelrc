@@ -1,3 +1,4 @@
 {
-  "presets": ["kyt-react", "babel-preset-kyt-core"]
+  "presets": ["kyt-react", "babel-preset-kyt-core"],
+  "plugins": ["babel-plugin-inline-import"]
 }

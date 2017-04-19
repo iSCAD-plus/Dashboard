@@ -124,7 +124,7 @@ class MandateExtractor(object):
     }
 
     if expiration is not None:
-      body['expiration'] = expiration.timestamp() * 1000
+      body['expiration'] = str(expiration)
 
     if force_auth.strip() != '':
       body['authorizationOfUseOfForce'] = {

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { makeExecutableSchema } from 'graphql-tools';
 import resolverMap from '../server/graphql';
+import schema from './schema.graphql';
 
 const Schema = mongoose.Schema;
 
@@ -26,7 +27,7 @@ const requiredEnum = values => ({
   },
 });
 
-const measureCategories = [
+export const measureCategories = [
   'drug precursor embargo',
   'luxury goods embargo',
   'transportation and aviation sanctions',
@@ -49,7 +50,7 @@ const measureCategories = [
   'oil/petroleum embargo',
 ];
 
-const measureTypes = [
+export const measureTypes = [
   'establish',
   'modify',
   'extend',
@@ -62,7 +63,7 @@ const measureSchema = new Schema({
   measureType: requiredEnum(measureTypes),
 });
 
-const decisionTypes = [
+export const decisionTypes = [
   'extend',
   'implementation',
   'establish',
@@ -81,9 +82,9 @@ const decisionSchema = new Schema({
   measures: [measureSchema],
 });
 
-const ccrTableNames = ['wps', 'caac', 'poc'];
-const ccrCategories = ['thematic', 'country/region'];
-const ccrStatementTypes = ['pp', 'op', 'prst'];
+export const ccrTableNames = ['wps', 'caac', 'poc'];
+export const ccrCategories = ['thematic', 'country/region'];
+export const ccrStatementTypes = ['pp', 'op', 'prst'];
 const ccrSchema = new Schema({
   table: requiredEnum(ccrTableNames),
   symbol: required(String),
@@ -95,7 +96,7 @@ const ccrSchema = new Schema({
   keywords: [String],
 });
 
-const mandateComponents = [
+export const mandateComponents = [
   'Rule of law (ROL)',
   'Humanitarian support',
   'Public information',
@@ -111,7 +112,8 @@ const mandateComponents = [
   'Demilitarization and arms management',
   'Authorization of the use of force',
 ];
-const mandateSubcomponents = [
+
+export const mandateSubcomponents = [
   'Judicial matters',
   'Protection of civilians, including refugees and IDPs',
   ':DPA-led',
@@ -130,7 +132,7 @@ const mandateComponentSchema = new Schema({
   excerpt: String,
 });
 
-const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
+export const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
 const mandateSchema = new Schema({
   name: required(String),
   location: String,
@@ -146,113 +148,7 @@ const mandateSchema = new Schema({
 });
 
 const graphqlSchema = makeExecutableSchema({
-  typeDefs: `
-    type Mutation {
-      createDecision(decision: DecisionInput): Decision,
-      createCCRR(row: CCRRInput): CrossCuttingResearchRow,
-      createMandate(mandate: MandateInput): Mandate
-    }
-
-    type Query {
-      getDecisions: [Decision],
-      countDecisions: Int,
-
-      countCCRR(table: String): Int,
-
-      countMandates: Int
-    }
-
-    input DecisionInput {
-      decision: String!,
-      regime: String!,
-      year: Int!,
-      date: Date!,
-      numParagraphs: Int!,
-      decisionType: String!,
-      measures: [MeasureInput]
-    }
-
-    input MeasureInput {
-      measureType: String,
-      measureCategory: String
-    }
-
-    input CCRRInput {
-      table: String!,
-      symbol: String!,
-      category: String!,
-      agendaItem: String!,
-      statementType: String!,
-      paragraphId: String!,
-      provision: String!,
-      keywords: [String]
-    }
-
-    input MandateInput {
-      name: String!,
-      location: String,
-      originalDecision: String!,
-      subsequentDecisions: [String],
-      latestDecision: String,
-      expiration: Date,
-      currentLength: String!,
-      leadEntity: String!,
-      chapterVII: Boolean!,
-      authorizationOfUseOfForce: MandateComponentInput,
-      mandateComponents: [MandateComponentInput]
-    }
-
-    input MandateComponentInput {
-      component: String!,
-      subcomponent: String,
-      resolutions: String,
-      excerpt: String
-    }
-
-    type Decision {
-      decision: String,
-      regime: String,
-      year: Int,
-      date: Date,
-      numParagraphs: Int,
-      decisionType: String,
-      measures: [Measure]
-    }
-
-    type Measure {
-      measureType: String, # TODO: rename
-      measureCategory: String # TODO: rename
-    }
-
-    scalar Date
-
-    type CrossCuttingResearchRow {
-      table: String,
-      symbol: String,
-      category: String,
-      agendaItem: String,
-      statementType: String,
-      paragraphId: String,
-      provision: String,
-      keywords: [String]
-    }
-
-    type Mandate {
-      name: String,
-      location: String,
-      decisions: [String],
-      expiration: Date,
-      currentLength: String,
-      leadEntity: String,
-      mandateComponents: [MandateComponent]
-    }
-
-    type MandateComponent {
-      component: String,
-      subcomponent: String,
-      excerpt: String
-    }
-  `,
+  typeDefs: [schema],
   resolvers: resolverMap,
 });
 
@@ -270,7 +166,4 @@ const schemas = {
   graphql: graphqlSchema,
 };
 
-export { measureCategories, measureTypes, decisionTypes };
-export { ccrTableNames, ccrCategories, ccrStatementTypes };
-export { leadEntities, mandateComponents, mandateSubcomponents };
 export default schemas;
