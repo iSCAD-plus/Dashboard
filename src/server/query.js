@@ -1,33 +1,43 @@
+import R from 'ramda';
 import schemas from '../schema';
 
 export const decisionQuery = (obj, args, context, resolveInfo) => {
-  console.log('obj: ');
-  console.log(obj);
-  console.log('\n\n');
-  console.log('resolveInfo: ');
-  // const names = resolveInfo.operation.selectionSet.selections.map(
-  //  selection => selection.name.value
-  // );
-  const names2 = resolveInfo.operation.selectionSet.selections[
+  const selectedFields = resolveInfo.operation.selectionSet.selections[
     0
   ].selectionSet.selections.map(selection => selection.name.value);
-  console.log(names2);
-  console.log('\n\n');
 
-  console.log(
-    schemas.Decision
-      .aggregate([
-        {
-          $group: {
-            _id: '$year',
-            year: { $first: '$year' },
-            count: { $sum: 1 },
-          },
-        },
-      ])
-      .exec()
-      .then(x => console.log(x))
-  );
+  const queryKeys = R.reject(R.equals('count'), selectedFields);
+  const shouldUnwind = R.any(k => k.startsWith('measure'), queryKeys);
 
-  return null;
+  const prepend = key =>
+    key.startsWith('measure') ? `$measures.${key}` : `$${key}`;
+
+  const id = {
+    $concat: R.intersperse(
+      '|',
+      queryKeys.map(k => ({
+        $substr: [prepend(k), 0, -1],
+      }))
+    ),
+  };
+  console.log(R.intersperse('|', queryKeys.map(k => `$${k}`)));
+  console.log(id);
+
+  const groupObj = {
+    $group: queryKeys.reduce(
+      (o, key) => Object.assign({}, o, {
+        [key]: { $first: prepend(key) },
+      }),
+      { _id: id, count: { $sum: 1 } }
+    ),
+  };
+
+  console.log(groupObj);
+
+  const unwindOperator = { $unwind: '$measures' };
+  const pipeline = shouldUnwind ? [unwindOperator, groupObj] : [groupObj];
+
+  const resultPromise = schemas.Decision.aggregate(pipeline).exec();
+
+  return resultPromise;
 };
