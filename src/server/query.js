@@ -25,17 +25,24 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
 
   const groupObj = {
     $group: queryKeys.reduce(
-      (o, key) => Object.assign({}, o, {
-        [key]: { $first: prepend(key) },
-      }),
+      (o, key) =>
+        Object.assign({}, o, {
+          [key]: { $first: prepend(key) },
+        }),
       { _id: id, count: { $sum: 1 } }
     ),
+  };
+
+  const sort = {
+    $sort: { _id: -1 },
   };
 
   console.log(groupObj);
 
   const unwindOperator = { $unwind: '$measures' };
-  const pipeline = shouldUnwind ? [unwindOperator, groupObj] : [groupObj];
+  const pipeline = shouldUnwind
+    ? [unwindOperator, groupObj, sort]
+    : [groupObj, sort];
 
   const resultPromise = schemas.Decision.aggregate(pipeline).exec();
 
