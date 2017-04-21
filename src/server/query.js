@@ -5,27 +5,20 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
   const prepend = key =>
     key.startsWith('measure') ? `$measures.${key}` : `$${key}`;
 
-  const aggregationOperator = (key) => {
-    switch (key) {
-      case 'count':
-        return { $sum: 1 };
-      case 'month':
-        return { $first: { $month: prepend('date') } };
-      default:
-        return { $first: prepend(key) };
-    }
-  };
+  const aggregationOperator = R.cond([
+    [R.equals('count'), R.always({ $sum: 1 })],
+    [R.equals('month'), R.always({ $first: { $month: prepend('date') } })],
+    [R.T, key => ({ $first: prepend(key) })],
+  ]);
 
-  const formId = (key) => {
-    switch (key) {
-      case 'count':
-        return '';
-      case 'month':
-        return { $substr: [{ $month: prepend('date') }, 0, -1] };
-      default:
-        return { $substr: [prepend('date'), 0, -1] };
-    }
-  };
+  const formId = R.cond([
+    [R.equals('count'), R.always('')],
+    [
+      R.equals('month'),
+      R.always({ $substr: [{ $month: prepend('date') }, 0, -1] }),
+    ],
+    [R.T, key => ({ $substr: [prepend(key), 0, -1] })],
+  ]);
 
   const queryKeys = resolveInfo.operation.selectionSet.selections[
     0
@@ -45,7 +38,7 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
         Object.assign({}, o, {
           [key]: aggregationOperator(key),
         }),
-      { _id: id, count: aggregationOperator('count') }
+      { _id: id }
     ),
   };
 
