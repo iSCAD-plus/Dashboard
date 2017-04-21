@@ -2,8 +2,11 @@ import R from 'ramda';
 import schemas from '../schema';
 
 export const decisionQuery = (obj, args, context, resolveInfo) => {
-  const prepend = key =>
-    key.startsWith('measure') ? `$measures.${key}` : `$${key}`;
+  const prepend = R.ifElse(
+    R.test(/^measure/),
+    R.concat('$measures'),
+    R.concat('$')
+  );
 
   const aggregationOperator = R.cond([
     [R.equals('count'), R.always({ $sum: 1 })],
