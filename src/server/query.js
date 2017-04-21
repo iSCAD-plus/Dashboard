@@ -2,23 +2,39 @@ import R from 'ramda';
 import schemas from '../schema';
 
 export const decisionQuery = (obj, args, context, resolveInfo) => {
-  const selectedFields = resolveInfo.operation.selectionSet.selections[
-    0
-  ].selectionSet.selections.map(selection => selection.name.value);
-
-  const queryKeys = R.reject(R.equals('count'), selectedFields);
-  const shouldUnwind = R.any(k => k.startsWith('measure'), queryKeys);
-
   const prepend = key =>
     key.startsWith('measure') ? `$measures.${key}` : `$${key}`;
 
+  const aggregationOperator = (key) => {
+    switch (key) {
+      case 'count':
+        return { $sum: 1 };
+      case 'month':
+        return { $first: { $month: prepend('date') } };
+      default:
+        return { $first: prepend(key) };
+    }
+  };
+
+  const formId = (key) => {
+    switch (key) {
+      case 'count':
+        return '';
+      case 'month':
+        return { $substr: [{ $month: prepend('date') }, 0, -1] };
+      default:
+        return { $substr: [prepend('date'), 0, -1] };
+    }
+  };
+
+  const queryKeys = resolveInfo.operation.selectionSet.selections[
+    0
+  ].selectionSet.selections.map(selection => selection.name.value);
+
+  const shouldUnwind = R.any(k => k.startsWith('measure'), queryKeys);
+
   const id = {
-    $concat: R.intersperse(
-      '|',
-      queryKeys.map(k => ({
-        $substr: [prepend(k), 0, -1],
-      }))
-    ),
+    $concat: R.intersperse('|', queryKeys.map(formId)),
   };
   console.log(R.intersperse('|', queryKeys.map(k => `$${k}`)));
   console.log(id);
@@ -27,9 +43,9 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
     $group: queryKeys.reduce(
       (o, key) =>
         Object.assign({}, o, {
-          [key]: { $first: prepend(key) },
+          [key]: aggregationOperator(key),
         }),
-      { _id: id, count: { $sum: 1 } }
+      { _id: id, count: aggregationOperator('count') }
     ),
   };
 

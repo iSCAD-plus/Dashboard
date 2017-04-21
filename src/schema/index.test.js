@@ -14,6 +14,7 @@ import schemas, {
   measureTypes,
 } from '.';
 
+mongoose.Promise = Promise;
 mongoose.connect('localhost', 'iscad-test');
 
 test('Correct documents can be saved', () => {
