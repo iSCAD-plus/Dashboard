@@ -32,7 +32,7 @@ app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 // Setup graphql
 app.use(
-  '/graphql',
+  '/api/graphql',
   graphqlHTTP({
     schema: schemas.graphql,
     rootValue: root,
