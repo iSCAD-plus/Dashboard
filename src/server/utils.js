@@ -16,7 +16,7 @@ export const deepPluck = S.curry2((lens, xs) =>
 
 const prepend = R.ifElse(
   R.test(/^measure/),
-  R.concat('$measures'),
+  R.concat('$measures.'),
   R.concat('$')
 );
 

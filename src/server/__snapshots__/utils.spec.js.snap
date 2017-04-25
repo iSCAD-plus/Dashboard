@@ -19,6 +19,14 @@ Object {
         "|",
         Object {
           "$substr": Array [
+            "$measures.measure-potato",
+            0,
+            -1,
+          ],
+        },
+        "|",
+        Object {
+          "$substr": Array [
             "$potato",
             0,
             -1,
@@ -28,6 +36,9 @@ Object {
     },
     "count": Object {
       "$sum": 1,
+    },
+    "measure-potato": Object {
+      "$first": "$measures.measure-potato",
     },
     "month": Object {
       "$first": Object {

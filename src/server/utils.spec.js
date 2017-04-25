@@ -6,7 +6,8 @@ import {
 
 const a = 'count';
 const b = 'month';
-const c = 'potato';
+const c = 'measure-potato';
+const d = 'potato';
 
 const data = {
   operation: {
@@ -15,21 +16,10 @@ const data = {
         {
           selectionSet: {
             selections: [
-              {
-                name: {
-                  value: a,
-                },
-              },
-              {
-                name: {
-                  value: b,
-                },
-              },
-              {
-                name: {
-                  value: c,
-                },
-              },
+              { name: { value: a } },
+              { name: { value: b } },
+              { name: { value: c } },
+              { name: { value: d } },
             ],
           },
         },
@@ -40,7 +30,7 @@ const data = {
 
 describe('#getQueryKeys', () => {
   it('should get the keys', () => {
-    expect(getQueryKeys(data)).toEqual([a, b, c]);
+    expect(getQueryKeys(data)).toEqual([a, b, c, d]);
   });
 
   it('should swallow errors and return an empty array', () => {
