@@ -1,0 +1,9 @@
+*
+!package.json
+!src/
+!jest.setup.js
+!kyt.config.js
+!.eslintrc.js
+!.stylelintrc.json
+!.babelrc
+
