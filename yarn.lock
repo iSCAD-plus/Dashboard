@@ -1557,13 +1557,6 @@ concat-stream@^1.4.7, concat-stream@^1.5.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-concurrify@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/concurrify/-/concurrify-0.1.1.tgz#ae8ae2cd5bded30aee315b3bd5322ae4de38ee85"
-  dependencies:
-    sanctuary-type-classes "^3.0.0"
-    sanctuary-type-identifiers "^1.0.0"
-
 configstore@^1.0.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/configstore/-/configstore-1.4.0.tgz#c35781d0501d268c25c54b8b17f6240e8a4fb021"
@@ -2788,15 +2781,6 @@ flow-parser@0.40.0:
     colors ">=0.6.2"
     minimist ">=0.2.0"
 
-fluture@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/fluture/-/fluture-5.0.0.tgz#5abd07756a12edc54907b7a6d40e61e717cd9b0f"
-  dependencies:
-    concurrify "^0.1.0"
-    inspect-f "^1.2.0"
-    sanctuary-type-classes "^3.0.0"
-    sanctuary-type-identifiers "^1.0.0"
-
 for-in@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -3408,10 +3392,6 @@ inquirer@^3.0.4:
     string-width "^2.0.0"
     strip-ansi "^3.0.0"
     through "^2.3.6"
-
-inspect-f@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/inspect-f/-/inspect-f-1.2.1.tgz#117573b5df57a509de6fe401131d426bac1592b5"
 
 install@0.8.1:
   version "0.8.1"
@@ -6315,13 +6295,13 @@ sanctuary-type-classes@2.0.x:
   dependencies:
     sanctuary-type-identifiers "1.0.x"
 
-sanctuary-type-classes@3.0.1, sanctuary-type-classes@^3.0.0:
+sanctuary-type-classes@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/sanctuary-type-classes/-/sanctuary-type-classes-3.0.1.tgz#65163f8e1dfdfdc05cf842b83b608fff921cda15"
   dependencies:
     sanctuary-type-identifiers "1.0.x"
 
-sanctuary-type-identifiers@1.0.0, sanctuary-type-identifiers@1.0.x, sanctuary-type-identifiers@^1.0.0:
+sanctuary-type-identifiers@1.0.0, sanctuary-type-identifiers@1.0.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/sanctuary-type-identifiers/-/sanctuary-type-identifiers-1.0.0.tgz#e8f359f006cb5e624cfb8464603fc114608bde9f"
 

@@ -14,7 +14,6 @@
     "compression": "1.6.2",
     "express": "4.14.0",
     "express-graphql": "github:ntietz/express-graphql#dist",
-    "fluture": "^5.0.0",
     "graphql": "^0.9.2",
     "graphql-custom-types": "^0.7.1",
     "graphql-tools": "^0.11.0",
