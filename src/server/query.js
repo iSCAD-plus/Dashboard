@@ -4,7 +4,7 @@ import schemas from '../schema';
 export const decisionQuery = (obj, args, context, resolveInfo) => {
   const prepend = R.ifElse(
     R.test(/^measure/),
-    R.concat('$measures'),
+    R.concat('$measures.'),
     R.concat('$')
   );
 

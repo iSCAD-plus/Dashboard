@@ -50,7 +50,7 @@ for extractor in extractors:
         continue
 
     body = extractor.process_row(rowvals)
-    req = requests.post('http://localhost:3000/graphql', json=body)
+    req = requests.post('http://localhost:3000/api/graphql', json=body)
     if req.status_code != 200:
       numFatalErrors += 1
       print('error inserting row {row}'.format(row=row))
@@ -59,7 +59,7 @@ for extractor in extractors:
     else:
       numInserted += 1
 
-  req = requests.post('http://localhost:3000/graphql', json=extractor.count_query())
+  req = requests.post('http://localhost:3000/api/graphql', json=extractor.count_query())
   if req.status_code != 200:
     print('error getting final count')
     finalCount = 0

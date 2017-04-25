@@ -15,7 +15,7 @@ import schemas from '../schema';
 import root from './graphql';
 
 mongoose.Promise = Promise;
-mongoose.connect('localhost', 'iscad-test'); // TODO: connect to a real db
+mongoose.connect(process.env.MONGO);
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = parseInt(KYT.SERVER_PORT, 10);
