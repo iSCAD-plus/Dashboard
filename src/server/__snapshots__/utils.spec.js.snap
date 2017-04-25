@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#createGroupAggregation should create the correct object 1`] = `
+Object {
+  "$group": Object {
+    "_id": Object {
+      "$concat": Array [
+        "",
+        "|",
+        Object {
+          "$substr": Array [
+            Object {
+              "$month": "$date",
+            },
+            0,
+            -1,
+          ],
+        },
+        "|",
+        Object {
+          "$substr": Array [
+            "$potato",
+            0,
+            -1,
+          ],
+        },
+      ],
+    },
+    "count": Object {
+      "$sum": 1,
+    },
+    "month": Object {
+      "$first": Object {
+        "$month": "$date",
+      },
+    },
+    "potato": Object {
+      "$first": "$potato",
+    },
+  },
+}
+`;
