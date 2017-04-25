@@ -88,7 +88,7 @@ export const createGroupAggregation = S.pipe([
   R.objOf('$group'),
 ]);
 
-// Comparable to:o
+// Comparable to:
 // export function createGroupAggregation(keys) {
 //   return {
 //     $group: keys.reduce(
