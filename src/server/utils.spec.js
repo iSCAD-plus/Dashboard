@@ -8,6 +8,7 @@ const a = 'count';
 const b = 'month';
 const c = 'measure-potato';
 const d = 'potato';
+const keys = [a, b, c, d];
 
 const data = {
   operation: {
@@ -30,7 +31,7 @@ const data = {
 
 describe('#getQueryKeys', () => {
   it('should get the keys', () => {
-    expect(getQueryKeys(data)).toEqual([a, b, c, d]);
+    expect(getQueryKeys(data)).toEqual(keys);
   });
 
   it('should swallow errors and return an empty array', () => {
@@ -46,8 +47,6 @@ describe('#hasMeasurePrefix', () => {
 });
 
 describe('#createGroupAggregation', () => {
-  const keys = getQueryKeys(data);
-
   it('should create the correct object', () => {
     expect(createGroupAggregation(keys)).toMatchSnapshot();
   });
