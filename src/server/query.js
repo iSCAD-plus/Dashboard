@@ -47,10 +47,14 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
     $sort: { _id: -1 },
   };
 
+  const filterOperator = {
+    $match: args,
+  };
+
   const unwindOperator = { $unwind: '$measures' };
   const pipeline = shouldUnwind
-    ? [unwindOperator, groupObj, sort]
-    : [groupObj, sort];
+    ? [filterOperator, unwindOperator, groupObj, sort]
+    : [filterOperator, groupObj, sort];
 
   const resultPromise = schemas.Decision.aggregate(pipeline).exec();
 

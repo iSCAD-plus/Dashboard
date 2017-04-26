@@ -10,7 +10,7 @@ type Query {
   countDecisions: Int,
   countCCRR(table: String): Int,
   countMandates: Int,
-  decisionQuery: [DecisionQueryResult]
+  decisionQuery(regime: String): [DecisionQueryResult]
 }
 
 input DecisionInput {
