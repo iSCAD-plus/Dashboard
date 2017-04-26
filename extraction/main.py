@@ -10,7 +10,7 @@ from iscad.extractors.mandates import MandateExtractor
 
 host = 'localhost:3000' if len(sys.argv) < 2 else sys.argv[1]
 
-decisionsFilename = './data/decisionsDatabaseUnlocked-updated.xlsx'
+decisionsFilename = './data/decisionsDatabaseUnlocked.xlsx'
 wpsFilename = './data/wps_cross-cutting.xls'
 caacFilename = './data/caac_cross-cutting.xls'
 pocFilename = './data/poc_cross-cutting.xls'
