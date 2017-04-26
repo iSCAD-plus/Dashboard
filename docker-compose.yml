@@ -1,21 +1,5 @@
 version: "3"
 services:
-  api:
-    image: iscad-api
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 100M
-    ports:
-      - "3000:3000"
-    networks:
-      - iscad_net
-    env_file:
-      - active.env
   db:
     image: mongo
     deploy:
@@ -28,10 +12,23 @@ services:
           memory: 500M
     ports:
       - "27018:27017" # off the standard port to avoid conflicts
-    networks:
-      - iscad_net
     volumes:
       - ./mongodata:/data/db
-
-networks:
-  iscad_net:
+  api:
+    build: .
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 100M
+    ports:
+      - "3000:3000"
+    env_file:
+      - active.env
+    depends_on:
+      - db
+    links:
+      - db
