@@ -1,0 +1,9 @@
+*
+
+!Pipfile
+!iscad/
+!iscad/**/*.py
+!main.py
+
+**/*.pyc
+**/__pycache__

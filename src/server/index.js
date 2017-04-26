@@ -14,7 +14,8 @@ import routes from '../routes';
 import schemas from '../schema';
 import root from './graphql';
 
-mongoose.connect('localhost', 'iscad-test'); // TODO: connect to a real db
+mongoose.Promise = Promise;
+mongoose.connect(process.env.MONGO);
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = parseInt(KYT.SERVER_PORT, 10);
@@ -31,7 +32,7 @@ app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 // Setup graphql
 app.use(
-  '/graphql',
+  '/api/graphql',
   graphqlHTTP({
     schema: schemas.graphql,
     rootValue: root,

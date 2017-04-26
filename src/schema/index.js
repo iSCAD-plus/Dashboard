@@ -147,9 +147,11 @@ const mandateSchema = new Schema({
   mandateComponents: [mandateComponentSchema],
 });
 
+const logger = { log: e => console.log(e) };
 const graphqlSchema = makeExecutableSchema({
   typeDefs: [schema],
   resolvers: resolverMap,
+  logger,
 });
 
 const Decision = mongoose.model('Decision', decisionSchema);

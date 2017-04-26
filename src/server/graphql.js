@@ -1,5 +1,6 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
 import schemas from '../schema';
+import { decisionQuery } from './query';
 
 const resolverMap = {
   Query: {
@@ -22,6 +23,8 @@ const resolverMap = {
     countMandates() {
       return schemas.Mandate.where({}).count();
     },
+
+    decisionQuery,
   },
 
   Mutation: {
