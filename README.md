@@ -35,6 +35,7 @@ locally.
 To deploy the stack locally, run:
 
 ```
+mkdir -p mongodata/
 docker stack deploy -c docker-compose.yml iscad
 ```
 
@@ -57,7 +58,8 @@ extractordata/
 └── wps_cross-cutting.xls
 ```
 
-Ensure you have the services running locally (see above, "Deploying locally", for instructions).
+Ensure you have the services running locally (see above, "Deploying locally",
+for instructions).
 
 Then run the loader:
 
@@ -65,5 +67,18 @@ Then run the loader:
 docker run -v `pwd`/extractordata:/app/data --network host iscad-extractor 
 ```
 
+## Connecting to MongoDB
+
+The Docker deploy creates a MongoDB instance running locally, which is used by
+the API container. To avoid conflicting with existing MongoDB instances on your
+computer, this is running on a non-standard port. To connect to it, specify
+the connection port as `27018` (1 port later than the standard port).
+
+The local test cluster defaults to using the DB name `iscad-test`, so this
+example connects the `mongo` client to your containerized DB:
+
+```
+mongo --port 27018 iscad-test
+```
 
 
