@@ -32,8 +32,6 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
   const id = {
     $concat: R.intersperse('|', queryKeys.map(formId)),
   };
-  console.log(R.intersperse('|', queryKeys.map(k => `$${k}`)));
-  console.log(id);
 
   const groupObj = {
     $group: queryKeys.reduce(
@@ -48,8 +46,6 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
   const sort = {
     $sort: { _id: -1 },
   };
-
-  console.log(groupObj);
 
   const unwindOperator = { $unwind: '$measures' };
   const pipeline = shouldUnwind
