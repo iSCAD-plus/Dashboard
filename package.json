@@ -49,7 +49,7 @@
     "react-addons-test-utils": "15.3.0"
   },
   "scripts": {
-    "dev": "kyt dev",
+    "dev": "kyt dev -C kyt.dev.js",
     "build": "kyt build",
     "start": "node build/server/main.js",
     "proto": "kyt proto",

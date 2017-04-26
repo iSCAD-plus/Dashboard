@@ -2,12 +2,15 @@ import xlrd
 import xlrd.xldate as xldate
 import json
 import requests
+import sys
 
 from iscad.extractors.decisions import DecisionsExtractor
 from iscad.extractors.crosscuttingresearch import CrossCuttingResearchExtractor
 from iscad.extractors.mandates import MandateExtractor
 
-decisionsFilename = './data/decisionsDatabaseUnlocked-updated.xlsx'
+host = 'localhost:3000' if len(sys.argv) < 2 else sys.argv[1]
+
+decisionsFilename = './data/decisionsDatabaseUnlocked.xlsx'
 wpsFilename = './data/wps_cross-cutting.xls'
 caacFilename = './data/caac_cross-cutting.xls'
 pocFilename = './data/poc_cross-cutting.xls'
@@ -50,7 +53,7 @@ for extractor in extractors:
         continue
 
     body = extractor.process_row(rowvals)
-    req = requests.post('http://localhost:3000/api/graphql', json=body)
+    req = requests.post('http://{host}/api/graphql'.format(host=host), json=body)
     if req.status_code != 200:
       numFatalErrors += 1
       print('error inserting row {row}'.format(row=row))
@@ -59,7 +62,7 @@ for extractor in extractors:
     else:
       numInserted += 1
 
-  req = requests.post('http://localhost:3000/api/graphql', json=extractor.count_query())
+  req = requests.post('http://{host}/api/graphql'.format(host=host), json=extractor.count_query())
   if req.status_code != 200:
     print('error getting final count')
     finalCount = 0

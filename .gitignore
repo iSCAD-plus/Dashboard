@@ -42,3 +42,5 @@ Thumbs.db
 # Python runtime files
 __pycache__/
 *.pyc
+
+mongodata/
