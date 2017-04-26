@@ -1,5 +1,5 @@
 # Use the latest Node image
-FROM kkarczmarczyk/node-yarn
+FROM node:latest
 
 # Create directory to work out of
 RUN mkdir /app
@@ -8,12 +8,12 @@ WORKDIR /app
 # Install dependencies first (assuming they'll change less frequently, this
 # will make image re-builds faster)
 ADD package.json package.json
-RUN yarn
+RUN npm install
 
 # Build source code
 ADD . /app
-RUN yarn build
+RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
