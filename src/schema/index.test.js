@@ -17,7 +17,7 @@ import schemas, {
 mongoose.Promise = Promise;
 mongoose.connect('localhost', 'iscad-test');
 
-test('Correct documents can be saved', () => {
+test('Correct documents can be saved', async () => {
   const decision = new schemas.Decision({
     decision: 'Res. 1234',
     regime: 'Fake Country',
@@ -36,6 +36,8 @@ test('Correct documents can be saved', () => {
   const error = decision.validateSync();
 
   expect(error).toBeFalsy();
+
+  await decision.save();
 });
 
 test('Incorrect documents get rejected', () => {
