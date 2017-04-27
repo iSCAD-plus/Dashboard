@@ -18,7 +18,7 @@
     "graphql-custom-types": "^0.7.1",
     "graphql-tools": "^0.11.0",
     "kyt": "^0.5.3",
-    "mongoose": "^4.9.4",
+    "mongoose": "<4.8",
     "ramda": "^0.23.0",
     "react": "15.3.0",
     "react-dom": "15.3.0",
