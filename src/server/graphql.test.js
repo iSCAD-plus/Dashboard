@@ -14,7 +14,7 @@ mongoose.connect('localhost', 'iscad-test-temp');
 
 const decisionSpec = jsc.record({
   decision: jsc.nestring,
-  regime: jsc.nestring,
+  regime: jsc.elements(['Iraq', 'DRC', 'Sudan', 'Iran', 'Burundi']),
   year: jsc.integer,
   date: jsc.datetime,
   numParagraphs: jsc.nat,
@@ -84,6 +84,29 @@ test('Populated DB returns the correct count', async () => {
 
   const result = await graphql(schemas.graphql, countQuery, resolverMap.Query);
   const expectedResult = { data: { countDecisions: numDecisions } };
+
+  expect(result).toEqual(expectedResult);
+});
+
+test('We can filter by regime', async () => {
+  const numDecisions = 200;
+  await addDecisions(numDecisions);
+
+  const iraqCount = await schemas.Decision
+    .find({ regime: 'Iraq' })
+    .count()
+    .exec();
+
+  const query = `
+    query DecisionsByRegime {
+      getDecisions(regime: "Iraq") {
+        decision
+      }
+    }
+  `;
+
+  const result = await graphql(schemas.graphql, query, resolverMap.Query);
+  const expectedResult = { data: { countDecisions: iraqCount } };
 
   expect(result).toEqual(expectedResult);
 });

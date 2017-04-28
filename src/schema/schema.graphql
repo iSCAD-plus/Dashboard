@@ -6,7 +6,7 @@ type Mutation {
 }
 
 type Query {
-  getDecisions: [Decision],
+  getDecisions(regime: String): [Decision],
   countDecisions: Int,
   countCCRR(table: String): Int,
   countMandates: Int,

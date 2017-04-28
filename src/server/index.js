@@ -12,7 +12,6 @@ import { renderToString } from 'react-dom/server';
 import template from './template';
 import routes from '../routes';
 import schemas from '../schema';
-import root from './graphql';
 
 mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGO);
@@ -35,7 +34,6 @@ app.use(
   '/api/graphql',
   graphqlHTTP({
     schema: schemas.graphql,
-    rootValue: root,
     graphiql: true, // TODO: turn this off for prod
     limit: 200 * 1024,
   })

@@ -5,6 +5,7 @@ import { decisionQuery } from './query';
 const resolverMap = {
   Query: {
     getDecisions() {
+      // console.log(obj, args, context, info);
       const doc = schemas.Decision.find();
       return doc;
     },
