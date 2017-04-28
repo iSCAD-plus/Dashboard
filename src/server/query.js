@@ -9,6 +9,7 @@ const sort = { $sort: { _id: -1 } };
 const unwindOperator = { $unwind: '$measures' };
 
 export const decisionQuery = (obj, args, context, resolveInfo) => {
+  console.log('decisionQuery:', resolveInfo);
   const queryKeys = getQueryKeys(resolveInfo);
   const group = createGroupAggregation(queryKeys);
   const filterOperator = { $match: args };

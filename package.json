@@ -46,7 +46,10 @@
     "lint-staged": "^3.4.0",
     "prettier-eslint": "^5.0.0",
     "prettier-eslint-cli": "^3.2.0",
-    "react-addons-test-utils": "15.3.0"
+    "querystring": "^0.2.0",
+    "react-addons-test-utils": "15.3.0",
+    "supertest": "^3.0.0",
+    "supertest-as-promised": "^4.0.2"
   },
   "scripts": {
     "dev": "kyt dev -C kyt.dev.js",

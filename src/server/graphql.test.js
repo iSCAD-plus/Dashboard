@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 import { graphql } from 'graphql';
 import R from 'ramda';
 import jsc from 'jsverify';
-import resolverMap from './graphql';
+import express from 'express';
+import request from 'supertest-as-promised';
+import { stringify } from 'querystring';
+import resolverMap, { graphqlResponder } from './graphql';
 import schemas, {
   decisionTypes,
   measureCategories,
@@ -41,20 +44,16 @@ const countQuery = `
   }
 `;
 
+const formGraphqlQuery = params => `/graphql?${stringify(params)}`;
+
 beforeEach(async () => {
-  const onError = (err) => {
-    if (err && err.message !== 'ns not found') {
-      console.log(err);
-    }
-  };
-  const drop = (coll) => {
-    coll.count();
-    coll.drop(onError);
-  };
-  R.map(drop, mongoose.connection.collections);
+  await mongoose.connection.dropDatabase();
 });
 
 test('Empty DB gives empty query', async () => {
+  const decisionCount = await schemas.Decision.find({}).count().exec();
+  expect(decisionCount).toEqual(0);
+
   const query = `
     query Foo {
       getDecisions {
@@ -72,6 +71,9 @@ test('Empty DB gives empty query', async () => {
 });
 
 test('Empty DB should return count of 0', async () => {
+  const decisionCount = await schemas.Decision.find({}).count().exec();
+  expect(decisionCount).toEqual(0);
+
   const result = await graphql(schemas.graphql, countQuery, resolverMap.Query);
   const expectedResult = { data: { countDecisions: 0 } };
 
@@ -89,7 +91,7 @@ test('Populated DB returns the correct count', async () => {
 });
 
 test('We can filter by regime', async () => {
-  const numDecisions = 200;
+  const numDecisions = 10;
   await addDecisions(numDecisions);
 
   const iraqCount = await schemas.Decision
@@ -100,12 +102,16 @@ test('We can filter by regime', async () => {
   const query = `
     query DecisionsByRegime {
       getDecisions(regime: "Iraq") {
-        decision
+        regime
       }
     }
   `;
 
-  const result = await graphql(schemas.graphql, query, resolverMap.Query);
+  const app = express();
+  app.use('*', graphqlResponder());
+
+  const result = await request(app).get('/graphql').send({ query });
+  // const result = await graphql(schemas.graphql, query, resolverMap.Query);
   const expectedResult = { data: { countDecisions: iraqCount } };
 
   expect(result).toEqual(expectedResult);

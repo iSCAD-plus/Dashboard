@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import graphqlHTTP from 'express-graphql';
 import compression from 'compression';
 import path from 'path';
 import React from 'react';
@@ -12,6 +11,7 @@ import { renderToString } from 'react-dom/server';
 import template from './template';
 import routes from '../routes';
 import schemas from '../schema';
+import { graphqlResponder } from './graphql';
 
 mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGO);
@@ -30,14 +30,7 @@ app.use(compression());
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 // Setup graphql
-app.use(
-  '/api/graphql',
-  graphqlHTTP({
-    schema: schemas.graphql,
-    graphiql: true, // TODO: turn this off for prod
-    limit: 200 * 1024,
-  })
-);
+app.use('/api/graphql', graphqlResponder());
 
 // Setup server side routing.
 app.get('*', (request, response) => {

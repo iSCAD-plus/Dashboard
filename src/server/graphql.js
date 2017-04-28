@@ -1,12 +1,13 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
+import graphqlHTTP from 'express-graphql';
 import schemas from '../schema';
 import { decisionQuery } from './query';
 
 const resolverMap = {
   Query: {
-    getDecisions() {
-      // console.log(obj, args, context, info);
-      const doc = schemas.Decision.find();
+    getDecisions(_, args) {
+      console.log('getDecisions args:', args);
+      const doc = schemas.Decision.find(args);
       return doc;
     },
 
@@ -59,5 +60,12 @@ const resolverMap = {
 
   DateTime: GraphQLDateTime,
 };
+
+export const graphqlResponder = () =>
+  graphqlHTTP({
+    schema: schemas.graphql,
+    graphiql: true, // TODO: turn this off for prod
+    limit: 200 * 1024,
+  });
 
 export default resolverMap;
