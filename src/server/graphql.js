@@ -6,13 +6,11 @@ import { decisionQuery } from './query';
 const resolverMap = {
   Query: {
     getDecisions(_, args) {
-      console.log('getDecisions args:', args);
       const doc = schemas.Decision.find(args);
       return doc;
     },
 
     countDecisions() {
-      console.log('Counting!');
       return schemas.Decision.where({}).count();
     },
 

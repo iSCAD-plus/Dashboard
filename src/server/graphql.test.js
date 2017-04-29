@@ -1,14 +1,12 @@
 import mongoose from 'mongoose';
 import { graphql } from 'graphql';
 import jsc from 'jsverify';
-import request from 'supertest';
-import resolverMap from './graphql';
 import schemas, {
   decisionTypes,
   measureCategories,
   measureTypes,
 } from '../schema';
-import { createApp } from './api';
+import resolverMap from './graphql';
 
 mongoose.Promise = Promise;
 mongoose.connect('localhost', 'iscad-test-temp');
@@ -97,20 +95,17 @@ test('We can filter by regime', async () => {
 
   const query = `
     query Q {
-      decisionQuery(regime: "Yemen") {
+      decisionQuery(regime: "Iraq") {
         regime,
         count
       }
     }
   `;
 
-  const app = createApp();
-
-  const result = await request(app)
-    .get('/api/graphql')
-    .send({ query, raw: true });
-  // const result = await graphql(schemas.graphql, countQuery, resolverMap.Query);
-  const expectedResult = { data: { countDecisions: iraqCount } };
+  const result = await graphql(schemas.graphql, query, resolverMap.Query);
+  const expectedResult = {
+    data: { decisionQuery: [{ regime: 'Iraq', count: iraqCount }] },
+  };
 
   expect(result).toEqual(expectedResult);
 });

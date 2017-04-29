@@ -1,5 +1,7 @@
 import express from 'express';
 import compression from 'compression';
+// The following import is needed for reasons that elude me. -ntietz
+import schemas from '../schema'; // eslint-disable-line no-unused-vars
 import { graphqlResponder } from './graphql';
 
 export const createApp = () => {
