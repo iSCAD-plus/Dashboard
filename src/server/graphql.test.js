@@ -1,16 +1,14 @@
 import mongoose from 'mongoose';
 import { graphql } from 'graphql';
-import R from 'ramda';
 import jsc from 'jsverify';
-import express from 'express';
-import request from 'supertest-as-promised';
-import { stringify } from 'querystring';
-import resolverMap, { graphqlResponder } from './graphql';
+import request from 'supertest';
+import resolverMap from './graphql';
 import schemas, {
   decisionTypes,
   measureCategories,
   measureTypes,
 } from '../schema';
+import { createApp } from './api';
 
 mongoose.Promise = Promise;
 mongoose.connect('localhost', 'iscad-test-temp');
@@ -43,8 +41,6 @@ const countQuery = `
     countDecisions
   }
 `;
-
-const formGraphqlQuery = params => `/graphql?${stringify(params)}`;
 
 beforeEach(async () => {
   await mongoose.connection.dropDatabase();
@@ -100,18 +96,20 @@ test('We can filter by regime', async () => {
     .exec();
 
   const query = `
-    query DecisionsByRegime {
-      getDecisions(regime: "Iraq") {
-        regime
+    query Q {
+      decisionQuery(regime: "Yemen") {
+        regime,
+        count
       }
     }
   `;
 
-  const app = express();
-  app.use('*', graphqlResponder());
+  const app = createApp();
 
-  const result = await request(app).get('/graphql').send({ query });
-  // const result = await graphql(schemas.graphql, query, resolverMap.Query);
+  const result = await request(app)
+    .get('/api/graphql')
+    .send({ query, raw: true });
+  // const result = await graphql(schemas.graphql, countQuery, resolverMap.Query);
   const expectedResult = { data: { countDecisions: iraqCount } };
 
   expect(result).toEqual(expectedResult);

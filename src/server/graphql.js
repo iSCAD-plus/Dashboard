@@ -12,6 +12,7 @@ const resolverMap = {
     },
 
     countDecisions() {
+      console.log('Counting!');
       return schemas.Decision.where({}).count();
     },
 
