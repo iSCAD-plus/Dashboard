@@ -1,4 +1,5 @@
-import schemas from '../schema';
+import { Decision } from '../mongoose';
+
 import {
   createGroupAggregation,
   getQueryKeys,
@@ -17,5 +18,5 @@ export const decisionQuery = (obj, args, context, resolveInfo) => {
     ? [filterOperator, unwindOperator, group, sort]
     : [filterOperator, group, sort];
 
-  return schemas.Decision.aggregate(pipeline).exec();
+  return Decision.aggregate(pipeline).exec();
 };
