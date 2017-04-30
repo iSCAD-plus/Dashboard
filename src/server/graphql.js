@@ -14,10 +14,8 @@ const resolverMap = {
     },
 
     countCCRR(_, { table }) {
-      if (table) {
-        return schemas.CrossCuttingResearchRow.where({ table }).count();
-      }
-      return schemas.CrossCuttingResearchRow.where({}).count();
+      const query = table ? { table } : {};
+      return schemas.CrossCuttingResearchRow.where(query).count();
     },
 
     countMandates() {
