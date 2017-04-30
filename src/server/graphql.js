@@ -6,8 +6,7 @@ import { decisionQuery } from './query';
 const resolverMap = {
   Query: {
     getDecisions(_, args) {
-      const doc = schemas.Decision.find(args);
-      return doc;
+      return schemas.Decision.find(args);
     },
 
     countDecisions() {
