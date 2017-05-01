@@ -22,10 +22,11 @@ export const createApp = () => {
   app.use(compression());
 
   // Setup graphql
-  app.use('/api/graphql', () =>
+  app.use(
+    '/api/graphql',
     graphqlHTTP({
       schema,
-      graphiql: true, // TODO: turn this off for prod
+      graphiql: process.env.NODE_ENV !== 'production',
       limit: 200 * 1024,
     })
   );
