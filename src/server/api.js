@@ -1,8 +1,16 @@
 import express from 'express';
 import compression from 'compression';
-// The following import is needed for reasons that elude me. -ntietz
-import schemas from '../schema'; // eslint-disable-line no-unused-vars
-import { graphqlResponder } from './graphql';
+import graphqlHTTP from 'express-graphql';
+import { makeExecutableSchema } from 'graphql-tools';
+
+import graphqlSchema from './schema.graphql';
+import resolvers from './resolvers';
+
+const schema = makeExecutableSchema({
+  resolvers,
+  typeDefs: [graphqlSchema],
+  logger: console,
+});
 
 export const createApp = () => {
   const app = express();
@@ -14,7 +22,13 @@ export const createApp = () => {
   app.use(compression());
 
   // Setup graphql
-  app.use('/api/graphql', graphqlResponder());
+  app.use('/api/graphql', () =>
+    graphqlHTTP({
+      schema,
+      graphiql: true, // TODO: turn this off for prod
+      limit: 200 * 1024,
+    })
+  );
 
   return app;
 };

@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#optionalEnum 1`] = `
+Object {
+  "enum": Object {
+    "message": "enum validator failed for path \`{PATH}\` with value \`{VALUE}\`.",
+    "values": Array [
+      1,
+      2,
+      3,
+    ],
+  },
+  "type": [Function],
+}
+`;
+
+exports[`#require 1`] = `
+Object {
+  "required": true,
+  "type": "toast",
+}
+`;
+
+exports[`#requiredEnum 1`] = `
+Object {
+  "enum": Object {
+    "message": "enum validator failed for path \`{PATH}\` with value \`{VALUE}\`.",
+    "values": Array [
+      1,
+      2,
+      3,
+    ],
+  },
+  "required": true,
+  "type": [Function],
+}
+`;
