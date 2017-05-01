@@ -21,6 +21,11 @@ export const createApp = () => {
   // Compress (gzip) assets in production.
   app.use(compression());
 
+  // Used to check if the API is up
+  app.use('/healthcheck', (req, res) => {
+    res.send('The server seems to be up.');
+  });
+
   // Setup graphql
   app.use('/api/graphql', () =>
     graphqlHTTP({
