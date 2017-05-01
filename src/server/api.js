@@ -26,7 +26,7 @@ export const createApp = () => {
     '/api/graphql',
     graphqlHTTP({
       schema,
-      graphiql: process.env.NODE_ENV !== 'production',
+      graphiql: true, // @TODO turn off in production
       limit: 200 * 1024,
     })
   );
