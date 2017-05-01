@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import jsc from 'jsverify';
 import { graphql } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
+import R from 'ramda';
 
 import { Decision } from '../mongoose';
 import {
@@ -98,7 +99,7 @@ test('Populated DB returns the correct count', async () => {
   expect(result).toEqual(expectedResult);
 });
 
-test('We can filter by regime', async () => {
+test('We can filter decision queries by regime', async () => {
   const numDecisions = 10;
   await addDecisions(numDecisions);
 
@@ -116,6 +117,35 @@ test('We can filter by regime', async () => {
   const result = await runGqlQuery(query);
   const expectedResult = {
     data: { decisionQuery: [{ regime: 'Iraq', count: iraqCount }] },
+  };
+
+  expect(result).toEqual(expectedResult);
+});
+
+test('We can filter decisions by regime', async () => {
+  const numDecisions = 20;
+  await addDecisions(numDecisions);
+
+  const sudanDecisions = R.map(
+    R.pick(['decision', 'regime', 'date']),
+    await Decision.find({ regime: 'Sudan' }, 'decision regime date').exec()
+  );
+
+  const query = `
+    query Q {
+      getDecisions(regime: "Sudan") {
+        decision,
+        regime,
+        date
+      }
+    }
+  `;
+
+  const result = await runGqlQuery(query);
+  const expectedResult = {
+    data: {
+      getDecisions: sudanDecisions,
+    },
   };
 
   expect(result).toEqual(expectedResult);
