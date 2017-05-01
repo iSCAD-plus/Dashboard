@@ -15,6 +15,16 @@ const schema = makeExecutableSchema({
 export const createApp = () => {
   const app = express();
 
+  // Open to other hosts for easier integration during development
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    next();
+  });
+
   // Remove annoying Express header addition.
   app.disable('x-powered-by');
 
