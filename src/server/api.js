@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import compression from 'compression';
 import graphqlHTTP from 'express-graphql';
@@ -15,16 +16,6 @@ const schema = makeExecutableSchema({
 export const createApp = () => {
   const app = express();
 
-  // Open to other hosts for easier integration during development
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept'
-    );
-    next();
-  });
-
   // Remove annoying Express header addition.
   app.disable('x-powered-by');
 
@@ -39,6 +30,7 @@ export const createApp = () => {
   // Setup graphql
   app.use(
     '/api/graphql',
+    cors(),
     graphqlHTTP({
       schema,
       graphiql: true, // @TODO turn off in production
