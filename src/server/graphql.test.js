@@ -1,15 +1,10 @@
 import mongoose from 'mongoose';
-import jsc from 'jsverify';
 import { graphql } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import R from 'ramda';
 
 import { Decision } from '../mongoose';
-import {
-  decisionTypes,
-  measureCategories,
-  measureTypes,
-} from '../mongoose/schemas';
+import { populate, decisionSampler } from './testutils';
 
 import resolvers from './resolvers';
 import graphqlSchema from './schema.graphql';
@@ -26,28 +21,7 @@ const schema = makeExecutableSchema({
 const { Query: RootQuery } = resolvers;
 const runGqlQuery = query => graphql(schema, query, RootQuery);
 
-const decisionSpec = jsc.record({
-  decision: jsc.nestring,
-  regime: jsc.elements(['Iraq', 'DRC', 'Sudan', 'Iran', 'Burundi']),
-  year: jsc.integer,
-  date: jsc.datetime,
-  numParagraphs: jsc.nat,
-  decisionType: jsc.elements(decisionTypes),
-  measures: jsc.array(
-    jsc.record({
-      measureCategory: jsc.elements(measureCategories),
-      measureType: jsc.elements(measureTypes),
-    })
-  ),
-});
-const decisionMaker = jsc.sampler(decisionSpec);
-
-const addDecisions = async (numDecisions) => {
-  const promises = decisionMaker(numDecisions).map(each =>
-    new Decision(each).save()
-  );
-  await Promise.all(promises);
-};
+const addDecisions = populate(Decision, decisionSampler);
 
 const countQuery = `
   query Q {
