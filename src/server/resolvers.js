@@ -1,28 +1,25 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
-import graphqlHTTP from 'express-graphql';
-import schemas from '../schema';
-import { decisionQuery } from './query';
 
-const resolverMap = {
+import { decisionQuery } from './query';
+import { CrossCuttingResearchRow, Decision, Mandate } from '../mongoose';
+
+export default {
   Query: {
     getDecisions(_, args) {
-      const doc = schemas.Decision.find(args);
-      return doc;
+      return Decision.find(args);
     },
 
     countDecisions() {
-      return schemas.Decision.where({}).count();
+      return Decision.where({}).count();
     },
 
     countCCRR(_, { table }) {
-      if (table) {
-        return schemas.CrossCuttingResearchRow.where({ table }).count();
-      }
-      return schemas.CrossCuttingResearchRow.where({}).count();
+      const query = table ? { table } : {};
+      return CrossCuttingResearchRow.where(query).count();
     },
 
     countMandates() {
-      return schemas.Mandate.where({}).count();
+      return Mandate.where({}).count();
     },
 
     decisionQuery,
@@ -30,7 +27,7 @@ const resolverMap = {
 
   Mutation: {
     createDecision(_, { decision }) {
-      const doc = new schemas.Decision(decision);
+      const doc = new Decision(decision);
       if (doc.validateSync()) {
         // TODO
       }
@@ -39,14 +36,14 @@ const resolverMap = {
     },
 
     createCCRR(_, { row }) {
-      const doc = new schemas.CrossCuttingResearchRow(row);
+      const doc = new CrossCuttingResearchRow(row);
       // TODO: use validation to check if we can insert it
       doc.save();
       return doc;
     },
 
     createMandate(_, { mandate }) {
-      const doc = new schemas.Mandate(mandate);
+      const doc = new Mandate(mandate);
       const errors = doc.validateSync();
       if (errors) {
         console.log(errors);
@@ -59,12 +56,3 @@ const resolverMap = {
 
   DateTime: GraphQLDateTime,
 };
-
-export const graphqlResponder = () =>
-  graphqlHTTP({
-    schema: schemas.graphql,
-    graphiql: true, // TODO: turn this off for prod
-    limit: 200 * 1024,
-  });
-
-export default resolverMap;

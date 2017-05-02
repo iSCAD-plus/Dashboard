@@ -1,8 +1,17 @@
+import cors from 'cors';
 import express from 'express';
 import compression from 'compression';
-// The following import is needed for reasons that elude me. -ntietz
-import schemas from '../schema'; // eslint-disable-line no-unused-vars
-import { graphqlResponder } from './graphql';
+import graphqlHTTP from 'express-graphql';
+import { makeExecutableSchema } from 'graphql-tools';
+
+import graphqlSchema from './schema.graphql';
+import resolvers from './resolvers';
+
+const schema = makeExecutableSchema({
+  resolvers,
+  typeDefs: [graphqlSchema],
+  logger: console,
+});
 
 export const createApp = () => {
   const app = express();
@@ -13,8 +22,21 @@ export const createApp = () => {
   // Compress (gzip) assets in production.
   app.use(compression());
 
+  // Used to check if the API is up
+  app.use('/healthcheck', (req, res) => {
+    res.send('The server seems to be up.');
+  });
+
   // Setup graphql
-  app.use('/api/graphql', graphqlResponder());
+  app.use(
+    '/api/graphql',
+    cors(),
+    graphqlHTTP({
+      schema,
+      graphiql: true, // @TODO turn off in production
+      limit: 200 * 1024,
+    })
+  );
 
   return app;
 };
