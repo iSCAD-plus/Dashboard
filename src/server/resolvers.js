@@ -1,10 +1,13 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
-
 import { decisionQuery } from './query';
-import { CrossCuttingResearchRow, Decision, Mandate } from '../mongoose';
+import { CrossCuttingResearchRow, Decision, Mandate, Plot } from '../mongoose';
 
 export default {
   Query: {
+    getPlots() {
+      return Plot.where({});
+    },
+
     getDecisions(_, args) {
       return Decision.find(args);
     },
@@ -51,6 +54,18 @@ export default {
       }
       doc.save();
       return doc;
+    },
+
+    createPlot(_, { name, query }) {
+      const doc = new Plot({ name, query });
+      const errors = doc.validateSync();
+
+      if (errors) {
+        console.log(errors);
+        // TODO
+      }
+      doc.save();
+      return { name, query };
     },
   },
 

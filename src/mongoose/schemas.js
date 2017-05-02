@@ -1,6 +1,11 @@
 import { Schema } from 'mongoose';
 import { required, optionalEnum, requiredEnum } from './utils';
 
+export const plotSchema = new Schema({
+  name: required(String),
+  query: required(Object),
+});
+
 export const measureCategories = [
   'drug precursor embargo',
   'luxury goods embargo',
