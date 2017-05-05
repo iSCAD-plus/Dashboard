@@ -40,7 +40,15 @@ module.exports = {
     'new-cap': [
       'error',
       {
-        capIsNewExceptions: ['Just', 'Nothing', 'Left', 'Right'],
+        capIsNewExceptions: [
+          'CrossCuttingResearchRow',
+          'Decision',
+          'Just',
+          'Left',
+          'Mandate',
+          'Nothing',
+          'Right',
+        ],
       },
     ],
   },

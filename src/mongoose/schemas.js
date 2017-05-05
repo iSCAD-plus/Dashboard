@@ -1,31 +1,5 @@
-import mongoose from 'mongoose';
-import { makeExecutableSchema } from 'graphql-tools';
-import resolverMap from '../server/graphql';
-import schema from './schema.graphql';
-
-const Schema = mongoose.Schema;
-
-const required = type => ({
-  type,
-  required: true,
-});
-
-const optionalEnum = values => ({
-  type: String,
-  enum: {
-    values,
-    message: 'enum validator failed for path `{PATH}` with value `{VALUE}`.',
-  },
-});
-
-const requiredEnum = values => ({
-  type: String,
-  required: true,
-  enum: {
-    values,
-    message: 'enum validator failed for path `{PATH}` with value `{VALUE}`.',
-  },
-});
+import { Schema } from 'mongoose';
+import { required, optionalEnum, requiredEnum } from './utils';
 
 export const measureCategories = [
   'drug precursor embargo',
@@ -72,7 +46,7 @@ export const decisionTypes = [
   'terminate',
 ];
 
-const decisionSchema = new Schema({
+export const decisionSchema = new Schema({
   decision: required(String),
   regime: required(String),
   year: required(Number),
@@ -85,7 +59,7 @@ const decisionSchema = new Schema({
 export const ccrTableNames = ['wps', 'caac', 'poc'];
 export const ccrCategories = ['thematic', 'country/region'];
 export const ccrStatementTypes = ['pp', 'op', 'prst'];
-const ccrSchema = new Schema({
+export const ccrSchema = new Schema({
   table: requiredEnum(ccrTableNames),
   symbol: required(String),
   category: requiredEnum(ccrCategories),
@@ -125,7 +99,8 @@ export const mandateSubcomponents = [
   'Support to police',
   'Maritime security',
 ];
-const mandateComponentSchema = new Schema({
+
+export const mandateComponentSchema = new Schema({
   component: requiredEnum(mandateComponents),
   subcomponent: optionalEnum(mandateSubcomponents),
   resolutions: String,
@@ -133,7 +108,7 @@ const mandateComponentSchema = new Schema({
 });
 
 export const leadEntities = ['DPKO', 'DPA', 'DPKO/AU'];
-const mandateSchema = new Schema({
+export const mandateSchema = new Schema({
   name: required(String),
   location: String,
   originalDecision: required(String),
@@ -146,26 +121,3 @@ const mandateSchema = new Schema({
   authorizationOfUseOfForce: mandateComponentSchema,
   mandateComponents: [mandateComponentSchema],
 });
-
-const logger = { log: e => console.log(e) };
-const graphqlSchema = makeExecutableSchema({
-  typeDefs: [schema],
-  resolvers: resolverMap,
-  logger,
-});
-
-const Decision = mongoose.model('Decision', decisionSchema);
-const CrossCuttingResearchRow = mongoose.model(
-  'CrossCuttingResearch',
-  ccrSchema
-);
-const Mandate = mongoose.model('Mandate', mandateSchema);
-
-const schemas = {
-  Decision,
-  CrossCuttingResearchRow,
-  Mandate,
-  graphql: graphqlSchema,
-};
-
-export default schemas;

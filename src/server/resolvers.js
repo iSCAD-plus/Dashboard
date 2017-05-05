@@ -1,27 +1,25 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
-import schemas from '../schema';
-import { decisionQuery } from './query';
 
-const resolverMap = {
+import { decisionQuery } from './query';
+import { CrossCuttingResearchRow, Decision, Mandate } from '../mongoose';
+
+export default {
   Query: {
-    getDecisions() {
-      const doc = schemas.Decision.find();
-      return doc;
+    getDecisions(_, args) {
+      return Decision.find(args);
     },
 
     countDecisions() {
-      return schemas.Decision.where({}).count();
+      return Decision.where({}).count();
     },
 
     countCCRR(_, { table }) {
-      if (table) {
-        return schemas.CrossCuttingResearchRow.where({ table }).count();
-      }
-      return schemas.CrossCuttingResearchRow.where({}).count();
+      const query = table ? { table } : {};
+      return CrossCuttingResearchRow.where(query).count();
     },
 
     countMandates() {
-      return schemas.Mandate.where({}).count();
+      return Mandate.where({}).count();
     },
 
     decisionQuery,
@@ -29,7 +27,7 @@ const resolverMap = {
 
   Mutation: {
     createDecision(_, { decision }) {
-      const doc = new schemas.Decision(decision);
+      const doc = new Decision(decision);
       if (doc.validateSync()) {
         // TODO
       }
@@ -38,14 +36,14 @@ const resolverMap = {
     },
 
     createCCRR(_, { row }) {
-      const doc = new schemas.CrossCuttingResearchRow(row);
+      const doc = new CrossCuttingResearchRow(row);
       // TODO: use validation to check if we can insert it
       doc.save();
       return doc;
     },
 
     createMandate(_, { mandate }) {
-      const doc = new schemas.Mandate(mandate);
+      const doc = new Mandate(mandate);
       const errors = doc.validateSync();
       if (errors) {
         console.log(errors);
@@ -58,5 +56,3 @@ const resolverMap = {
 
   DateTime: GraphQLDateTime,
 };
-
-export default resolverMap;

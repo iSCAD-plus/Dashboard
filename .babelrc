@@ -1,4 +1,4 @@
 {
-  "presets": ["kyt-react", "babel-preset-kyt-core", "stage-0"],
+  "presets": ["babel-preset-kyt-core", "stage-0"],
   "plugins": ["babel-plugin-inline-import"]
 }

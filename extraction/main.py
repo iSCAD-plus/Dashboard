@@ -3,6 +3,7 @@ import xlrd.xldate as xldate
 import json
 import requests
 import sys
+from contextlib import closing
 
 from iscad.extractors.decisions import DecisionsExtractor
 from iscad.extractors.crosscuttingresearch import CrossCuttingResearchExtractor
@@ -24,6 +25,13 @@ extractors = [
   CrossCuttingResearchExtractor(pocFilename, 'poc')
 ]
 
+MAX_RETRIES = 10
+def post(s, host, body):
+  for idx in range(0, MAX_RETRIES):
+    try:
+      return s.post('http://{host}/api/graphql'.format(host=host), json=body)
+    except Exception as ex:
+      print(ex)
 
 for extractor in extractors:
   numBad = 0
@@ -35,6 +43,8 @@ for extractor in extractors:
   print('sheet is {rows} x {cols}'.format(rows=extractor.num_rows(), cols=extractor.num_cols()))
   print('expecting to insert {rows}.'.format(rows=expectedRows))
   print()
+
+  s = requests.Session()
 
   for row, rowvals in extractor.rows():
 
@@ -53,21 +63,23 @@ for extractor in extractors:
         continue
 
     body = extractor.process_row(rowvals)
-    req = requests.post('http://{host}/api/graphql'.format(host=host), json=body)
-    if req.status_code != 200:
-      numFatalErrors += 1
-      print('error inserting row {row}'.format(row=row))
-      print(req.text)
-      print()
-    else:
-      numInserted += 1
+    if numInserted % 100 == 0:
+      print('Inserted ' + str(numInserted))
+    with closing(post(s, host, body)) as req:
+      if req.status_code != 200:
+        numFatalErrors += 1
+        print('error inserting row {row}'.format(row=row))
+        print(req.text)
+        print()
+      else:
+        numInserted += 1
 
-  req = requests.post('http://{host}/api/graphql'.format(host=host), json=extractor.count_query())
-  if req.status_code != 200:
-    print('error getting final count')
-    finalCount = 0
-  else:
-    finalCount = json.loads(req.text)['data'][extractor.count_keyword()]
+  with closing(post(s, host, extractor.count_query())) as req:
+    if req.status_code != 200:
+      print('error getting final count')
+      finalCount = 0
+    else:
+      finalCount = json.loads(req.text)['data'][extractor.count_keyword()]
 
   print()
   print('fatal errors in {n} rows'.format(n=numFatalErrors))
