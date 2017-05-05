@@ -5,12 +5,36 @@ type Mutation {
   createMandate(mandate: MandateInput): Mandate
 }
 
+# Perform queries against the underlying data in MongoDB.
 type Query {
-  getDecisions(regime: String): [Decision],
+
+  # retrieve a list of decisions in the database
+  getDecisions(
+    # filter by the provided regime
+    regime: String
+  ): [Decision],
+
+  # the total count of decisions in the database
   countDecisions: Int,
-  countCCRR(table: String): Int,
+
+  # count how many rows are in the cross cutting research table
+  countCCRR(
+    # if specified, counts within the given table. can be "wps", "caac", or "poc".
+    table: String
+  ): Int,
+
+  # count how many rows are in the mandates collection
   countMandates: Int,
-  decisionQuery(regime: String): [DecisionQueryResult]
+
+  # performs an aggregate query on the `decisions` collection by forming a
+  # MongoDB query dynamically.
+  #
+  # Note that the keys you specify to retrieve will alter what query gets run.
+  # See the `DecisionQueryResult` documentation for more details.
+  decisionQuery(
+    # if specified, restricts the query to a specific regime
+    regime: String
+  ): [DecisionQueryResult]
 }
 
 input DecisionInput {
@@ -70,14 +94,22 @@ type Decision {
   measures: [Measure]
 }
 
+# Result of a query against the `decisions` collection involving some form
+# of aggregation.
 type DecisionQueryResult {
   regime: String,
   year: Int,
   month: Int,
   numParagraphs: Int,
   decisionType: String,
+
+  # including this field in the selection set will unwind the collection
   measureType: String,
+
+  # including this field in the selection set will unwind the collection
   measureCategory: String,
+
+  # including this field in selection set groups the selected documents by the other keys in the selection set and resolves as a count of those groups
   count: Int
 }
 
