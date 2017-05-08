@@ -6,23 +6,26 @@ import sys
 from contextlib import closing
 
 from iscad.extractors.decisions import DecisionsExtractor
+from iscad.extractors.decisions2 import AltDecisionsExtractor
 from iscad.extractors.crosscuttingresearch import CrossCuttingResearchExtractor
 from iscad.extractors.mandates import MandateExtractor
 
 host = 'localhost:3000' if len(sys.argv) < 2 else sys.argv[1]
 
 decisionsFilename = './data/decisionsDatabaseUnlocked.xlsx'
+decisionsFilename2 = './data/SCDecisions-3.xlsx'
 wpsFilename = './data/wps_cross-cutting.xls'
 caacFilename = './data/caac_cross-cutting.xls'
 pocFilename = './data/poc_cross-cutting.xls'
 mandateFilename = './data/mandate_table_internal.xlsx'
 
 extractors = [
-  MandateExtractor(mandateFilename),
-  DecisionsExtractor(decisionsFilename),
-  CrossCuttingResearchExtractor(wpsFilename, 'wps'),
-  CrossCuttingResearchExtractor(caacFilename, 'caac'),
-  CrossCuttingResearchExtractor(pocFilename, 'poc')
+#  MandateExtractor(mandateFilename),
+#  DecisionsExtractor(decisionsFilename),
+#  CrossCuttingResearchExtractor(wpsFilename, 'wps'),
+#  CrossCuttingResearchExtractor(caacFilename, 'caac'),
+#  CrossCuttingResearchExtractor(pocFilename, 'poc')
+  AltDecisionsExtractor(decisionsFilename2)
 ]
 
 MAX_RETRIES = 10
@@ -63,16 +66,18 @@ for extractor in extractors:
         continue
 
     body = extractor.process_row(rowvals)
-    if numInserted % 100 == 0:
-      print('Inserted ' + str(numInserted))
-    with closing(post(s, host, body)) as req:
-      if req.status_code != 200:
-        numFatalErrors += 1
-        print('error inserting row {row}'.format(row=row))
-        print(req.text)
-        print()
-      else:
-        numInserted += 1
+    # TODO
+    #if numInserted % 100 == 0:
+    #  print('Inserted ' + str(numInserted))
+    # TODO
+    #with closing(post(s, host, body)) as req:
+    #  if req.status_code != 200:
+    #    numFatalErrors += 1
+    #    print('error inserting row {row}'.format(row=row))
+    #    print(req.text)
+    #    print()
+    #  else:
+    #    numInserted += 1
 
   with closing(post(s, host, extractor.count_query())) as req:
     if req.status_code != 200:
