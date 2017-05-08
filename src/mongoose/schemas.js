@@ -4,6 +4,11 @@ import { required, optionalEnum, requiredEnum } from './utils';
 export const plotSchema = new Schema({
   name: required(String),
   query: required(Object),
+  axis: required({
+    x: required(String),
+    y: required(String),
+    seriesKey: String,
+  }),
 });
 
 export const measureCategories = [

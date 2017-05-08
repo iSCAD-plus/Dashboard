@@ -1,4 +1,5 @@
 import {
+  createAxis,
   getQueryKeys,
   hasMeasurePrefix,
   createGroupAggregation,
@@ -52,5 +53,21 @@ describe('#hasMeasurePrefix', () => {
 describe('#createGroupAggregation', () => {
   it('should create the correct object', () => {
     expect(createGroupAggregation(keys)).toMatchSnapshot();
+  });
+});
+
+describe('#createAxis', () => {
+  const x = 'a';
+  const y = 'b';
+  const seriesKey = 'key';
+
+  describe('should create the correct axis given', () => {
+    it('a truthy seriesKey', () => {
+      expect(createAxis({ x, y, seriesKey })).toMatchSnapshot();
+    });
+
+    it('a falsy seriesKey', () => {
+      expect(createAxis({ x, y, seriesKey: undefined })).toMatchSnapshot();
+    });
   });
 });

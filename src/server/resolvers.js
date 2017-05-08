@@ -1,4 +1,6 @@
 import { GraphQLDateTime } from 'graphql-custom-types';
+
+import { createAxis } from './utils';
 import { decisionQuery } from './query';
 import { CrossCuttingResearchRow, Decision, Mandate, Plot } from '../mongoose';
 
@@ -56,8 +58,8 @@ export default {
       return doc;
     },
 
-    createPlot(_, { name, query }) {
-      const doc = new Plot({ name, query });
+    createPlot(_, { name, query, ...axis }) {
+      const doc = new Plot({ name, query, axis: createAxis(axis) });
       const errors = doc.validateSync();
 
       if (errors) {
@@ -65,7 +67,7 @@ export default {
         // TODO
       }
       doc.save();
-      return { name, query };
+      return doc;
     },
   },
 

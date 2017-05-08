@@ -27,30 +27,8 @@ module.exports = {
     'import/extensions': 0,
     'import/prefer-default-export': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'react/jsx-filename-extension': 0,
-    'react/no-unused-prop-types': 1,
-    'react/require-default-props': 1,
-
-    'no-underscore-dangle': [
-      'error',
-      {
-        allow: ['__', '_id'],
-      },
-    ],
-    'new-cap': [
-      'error',
-      {
-        capIsNewExceptions: [
-          'CrossCuttingResearchRow',
-          'Decision',
-          'Just',
-          'Left',
-          'Mandate',
-          'Nothing',
-          'Right',
-        ],
-      },
-    ],
+    'no-underscore-dangle': 0,
+    'new-cap': 0,
   },
   globals: {
     KYT: true,

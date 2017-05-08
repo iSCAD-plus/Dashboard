@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`#createAxis should create the correct axis given a falsy seriesKey 1`] = `
+Object {
+  "x": "a",
+  "y": "b",
+}
+`;
+
+exports[`#createAxis should create the correct axis given a truthy seriesKey 1`] = `
+Object {
+  "seriesKey": "key",
+  "x": "a",
+  "y": "b",
+}
+`;
+
 exports[`#createGroupAggregation should create the correct object 1`] = `
 Object {
   "$group": Object {

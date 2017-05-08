@@ -3,7 +3,13 @@ type Mutation {
   createDecision(decision: DecisionInput): Decision
   createCCRR(row: CCRRInput): CrossCuttingResearchRow
   createMandate(mandate: MandateInput): Mandate
-  createPlot(name: String! query: String!): Plot
+  createPlot(
+    name: String!
+    query: String!
+    x: String!
+    y: String!
+    seriesKey: String
+  ): Plot
 }
 
 type Query {
@@ -117,7 +123,14 @@ type MandateComponent {
   excerpt: String
 }
 
+type Axis {
+  x: String!
+  y: String!
+  seriesKey: String
+}
+
 type Plot {
   name: String!
   query: String!
+  axis: Axis!
 }
