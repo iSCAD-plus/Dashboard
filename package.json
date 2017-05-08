@@ -6,6 +6,33 @@
   "main": "",
   "author": "",
   "license": "",
+  "scripts": {
+    "dev": "kyt dev -C kyt.dev.js",
+    "build": "kyt build",
+    "start": "node build/server/main.js",
+    "image": "sh ./dockerize.sh",
+    "start-services": "yarn stop-services && yarn image && docker-compose up",
+    "stop-services": "docker-compose rm -v --force",
+    "test": "yarn jest -- --forceExit",
+    "test:watch": "yarn jest -- --watch",
+    "lint": "./node_modules/.bin/eslint ./src --ext .js",
+    "lint:staged": "./node_modules/.bin/lint-staged",
+    "lint:errors": "yarn lint -- --quiet",
+    "lint:nibble": "./node_modules/.bin/eslint-nibble src/",
+    "lint:fix": "yarn lint -- --fix",
+    "jest": "./node_modules/.bin/jest",
+    "prepush": "yarn test",
+    "precommit": "yarn lint:staged",
+    "format": "./node_modules/.bin/prettier-eslint \"*src/**/*.js\" --write",
+    "kyt:help": "kyt --help"
+  },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/prettier-eslint --write",
+      "git add",
+      "./node_modules/.bin/eslint"
+    ]
+  },
   "dependencies": {
     "babel-preset-kyt-core": "^0.2.0",
     "babel-runtime": "^6.23.0",
@@ -42,31 +69,6 @@
     "prettier-eslint": "^5.0.0",
     "prettier-eslint-cli": "^3.2.0",
     "supertest": "^3.0.0"
-  },
-  "scripts": {
-    "dev": "kyt dev -C kyt.dev.js",
-    "build": "kyt build",
-    "start": "node build/server/main.js",
-    "image": "sh ./dockerize.sh",
-    "test": "yarn jest -- --forceExit",
-    "test:watch": "yarn jest -- --watch",
-    "lint": "./node_modules/.bin/eslint ./src --ext .js",
-    "lint:staged": "./node_modules/.bin/lint-staged",
-    "lint:errors": "yarn lint -- --quiet",
-    "lint:nibble": "./node_modules/.bin/eslint-nibble src/",
-    "lint:fix": "yarn lint -- --fix",
-    "jest": "./node_modules/.bin/jest",
-    "prepush": "yarn test",
-    "precommit": "yarn lint:staged",
-    "format": "./node_modules/.bin/prettier-eslint \"*src/**/*.js\" --write",
-    "kyt:help": "kyt --help"
-  },
-  "lint-staged": {
-    "*.js": [
-      "./node_modules/.bin/prettier-eslint --write",
-      "git add",
-      "./node_modules/.bin/eslint"
-    ]
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./jest.setup.js",

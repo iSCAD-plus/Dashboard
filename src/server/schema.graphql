@@ -1,30 +1,40 @@
 
 type Mutation {
-  createDecision(decision: DecisionInput): Decision,
-  createCCRR(row: CCRRInput): CrossCuttingResearchRow,
+  createDecision(decision: DecisionInput): Decision
+  createCCRR(row: CCRRInput): CrossCuttingResearchRow
   createMandate(mandate: MandateInput): Mandate
+  createPlot(
+    name: String!
+    query: String!
+    x: String!
+    y: String!
+    seriesKey: String
+  ): Plot
 }
 
 # Perform queries against the underlying data in MongoDB.
 type Query {
+  # retrieve a list of datasets for visualization along with
+  # their data requirements stored as a graphql query
+  getPlots: [Plot]
 
   # retrieve a list of decisions in the database
   getDecisions(
     # filter by the provided regime
     regime: String
-  ): [Decision],
+  ): [Decision]
 
   # the total count of decisions in the database
-  countDecisions: Int,
+  countDecisions: Int
 
   # count how many rows are in the cross cutting research table
   countCCRR(
     # if specified, counts within the given table. can be "wps", "caac", or "poc".
     table: String
-  ): Int,
+  ): Int
 
   # count how many rows are in the mandates collection
-  countMandates: Int,
+  countMandates: Int
 
   # performs an aggregate query on the `decisions` collection by forming a
   # MongoDB query dynamically.
@@ -38,59 +48,59 @@ type Query {
 }
 
 input DecisionInput {
-  decision: String!,
-  regime: String!,
-  year: Int!,
-  date: DateTime!,
-  numParagraphs: Int!,
-  decisionType: String!,
+  decision: String!
+  regime: String!
+  year: Int!
+  date: DateTime!
+  numParagraphs: Int!
+  decisionType: String!
   measures: [MeasureInput]
 }
 
 input MeasureInput {
-  measureType: String,
+  measureType: String
   measureCategory: String
 }
 
 input CCRRInput {
-  table: String!,
-  symbol: String!,
-  category: String!,
-  agendaItem: String!,
-  statementType: String!,
-  paragraphId: String!,
-  provision: String!,
+  table: String!
+  symbol: String!
+  category: String!
+  agendaItem: String!
+  statementType: String!
+  paragraphId: String!
+  provision: String!
   keywords: [String]
 }
 
 input MandateInput {
-  name: String!,
-  location: String,
-  originalDecision: String!,
-  subsequentDecisions: [String],
-  latestDecision: String,
-  expiration: DateTime,
-  currentLength: String!,
-  leadEntity: String!,
-  chapterVII: Boolean!,
-  authorizationOfUseOfForce: MandateComponentInput,
+  name: String!
+  location: String
+  originalDecision: String!
+  subsequentDecisions: [String]
+  latestDecision: String
+  expiration: DateTime
+  currentLength: String!
+  leadEntity: String!
+  chapterVII: Boolean!
+  authorizationOfUseOfForce: MandateComponentInput
   mandateComponents: [MandateComponentInput]
 }
 
 input MandateComponentInput {
-  component: String!,
-  subcomponent: String,
-  resolutions: String,
+  component: String!
+  subcomponent: String
+  resolutions: String
   excerpt: String
 }
 
 type Decision {
-  decision: String,
-  regime: String,
-  year: Int,
-  date: DateTime,
-  numParagraphs: Int,
-  decisionType: String,
+  decision: String
+  regime: String
+  year: Int
+  date: DateTime
+  numParagraphs: Int
+  decisionType: String
   measures: [Measure]
 }
 
@@ -114,36 +124,47 @@ type DecisionQueryResult {
 }
 
 type Measure {
-  measureType: String,
+  measureType: String
   measureCategory: String
 }
 
 scalar DateTime
 
 type CrossCuttingResearchRow {
-  table: String,
-  symbol: String,
-  category: String,
-  agendaItem: String,
-  statementType: String,
-  paragraphId: String,
-  provision: String,
+  table: String
+  symbol: String
+  category: String
+  agendaItem: String
+  statementType: String
+  paragraphId: String
+  provision: String
   keywords: [String]
 }
 
 type Mandate {
-  name: String,
-  location: String,
-  decisions: [String],
-  expiration: DateTime,
-  currentLength: String,
-  leadEntity: String,
+  name: String
+  location: String
+  decisions: [String]
+  expiration: DateTime
+  currentLength: String
+  leadEntity: String
   mandateComponents: [MandateComponent]
 }
 
 type MandateComponent {
-  component: String,
-  subcomponent: String,
+  component: String
+  subcomponent: String
   excerpt: String
 }
 
+type Axis {
+  x: String!
+  y: String!
+  seriesKey: String
+}
+
+type Plot {
+  name: String!
+  query: String!
+  axis: Axis!
+}

@@ -1,1 +1,1 @@
-export { Mandate, Decision, CrossCuttingResearchRow } from './models';
+export { CrossCuttingResearchRow, Decision, Mandate, Plot } from './models';

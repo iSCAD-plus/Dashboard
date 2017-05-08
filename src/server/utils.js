@@ -44,3 +44,6 @@ export const createGroupAggregation = keys => ({
 });
 
 export const hasMeasurePrefix = R.any(k => k.startsWith('measure'));
+
+export const createAxis = ({ x, y, seriesKey }) =>
+  (seriesKey ? { x, y, seriesKey } : { x, y });
