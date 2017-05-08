@@ -1,0 +1,35 @@
+### NOTICE ####################################################################
+# This file is just to organize thoughts on the migration to pulling data from
+# more-raw data (more organic? less processed?), so it won't be pulled in
+# directly. Mostly, I want to be able to figure out what data we have and what
+# else we need.
+
+type DecisionGoal {
+  decision: String,
+  regime: String,
+  year: Int,
+  date: DateTime,
+  numParagraphs: Int,
+  decisionType: String,
+  measure: [Measure]
+}
+
+type DecisionReality {
+  date: DateTime,
+  symbol: String, # <-> DecisionGoal.decision
+  decisionType: String,
+  paragraphs: [DecisionParagraph]
+}
+
+type DecisionParagraph {
+  rawNumber: String,
+  number: Float,
+  type: String,
+  heading: String,
+  text: String,
+  agendaItem: String, # <-> DecisionGoal.regime
+  themeOfMeetings: String,
+  documentsTabled: String,
+  meetingNumber: String
+}
+
