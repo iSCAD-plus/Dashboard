@@ -5,6 +5,7 @@ insertQuery = None
 countQuery = None
 
 agenda_items = set()
+bad_symbols = set()
 
 class AltDecisionsExtractor(object):
 
@@ -12,16 +13,16 @@ class AltDecisionsExtractor(object):
     self.filename = filename
     self.workbook = xlrd.open_workbook(filename)
     self.worksheet = self.workbook.sheet_by_index(0)
-    self.dbheader = self.worksheet.row_values(0)
-    self.header = self.worksheet.row_values(1)
+    #self.dbheader = self.worksheet.row_values(0)
+    self.header = self.worksheet.row_values(0)
 
-    self.current_row = 2
+    self.current_row = 1
 
   def num_expected_inserts(self):
     # It's difficult to tell at an early stage how many inserts we will
     # actually have, since many rows may go into one insert. This count simply
     # assumes that there is one insert per row, which isn't quite true.
-    return self.worksheet.nrows - 2
+    return self.worksheet.nrows - 1
 
   def num_rows(self):
     return self.worksheet.nrows
@@ -41,23 +42,15 @@ class AltDecisionsExtractor(object):
       raw_rows = [self.worksheet.row_values(idx) for idx in range(rowidx, endidx)]
       #print(raw_rows)
 
-      yield (rowidx+1, raw_rows)
+      yield (rowidx+2, raw_rows)
 
   def validate_row(self, values):
     first_row = values[0]
 
-    DATE = 0
-    SYMBOL = 1
-    TYPE = 2
-    PARATYPE = 3
-    HEADING = 4
-    RAW_PARA_NUM = 5
-    NUM_PARA_NUM = 6
-    TEXT = 7
-    AGENDA = 8
-    THEME = 9
-    DOCS_TABLED = 10
-    MEETING_NUMBER = 11
+    DATE, SYMBOL_YEAR, SYMBOL, TYPE, \
+      PARATYPE, HEADING, RAW_PARA_NUM, \
+      NUM_PARA_NUM, TEXT, AGENDA, THEME, \
+      DOCS_TABLED, MEETING_NUMBER = range(0, 13)
 
     errors = []
 
@@ -94,7 +87,9 @@ class AltDecisionsExtractor(object):
         pnum = float(pnum)
       except:
         pnum = None
-        errors.append((True, 'could not convert paragraph number', '{raw}, {num}'.format(raw=row[RAW_PARA_NUM], num=row[NUM_PARA_NUM])))
+        if ptype.lower() != 'annex':
+          errors.append((True, 'could not convert paragraph number', '{raw}, {num}'.format(raw=row[RAW_PARA_NUM], num=row[NUM_PARA_NUM])))
+          bad_symbols.add(row[SYMBOL])
 
       paragraphs.append({
         'rawNumber': row[RAW_PARA_NUM],

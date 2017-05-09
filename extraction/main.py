@@ -13,7 +13,7 @@ from iscad.extractors.mandates import MandateExtractor
 host = 'localhost:3000' if len(sys.argv) < 2 else sys.argv[1]
 
 decisionsFilename = './data/decisionsDatabaseUnlocked.xlsx'
-decisionsFilename2 = './data/SCDecisions-3.xlsx'
+decisionsFilename2 = './data/SCDecisions-3-update.xlsx'
 wpsFilename = './data/wps_cross-cutting.xls'
 caacFilename = './data/caac_cross-cutting.xls'
 pocFilename = './data/poc_cross-cutting.xls'
@@ -96,6 +96,7 @@ for extractor in extractors:
     print()
     print('WARNING: wrong number of rows found. did you forget to clear the db before running this?')
 
-from iscad.extractors.decisions2 import agenda_items
-print(agenda_items)
+from iscad.extractors.decisions2 import agenda_items, bad_symbols
+#print(agenda_items)
+print(bad_symbols)
 
