@@ -96,4 +96,6 @@ for extractor in extractors:
     print()
     print('WARNING: wrong number of rows found. did you forget to clear the db before running this?')
 
+from iscad.extractors.decisions2 import agenda_items
+print(agenda_items)
 
