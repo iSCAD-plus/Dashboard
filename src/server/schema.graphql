@@ -121,6 +121,8 @@ type DecisionQueryResult {
 
   # including this field in selection set groups the selected documents by the other keys in the selection set and resolves as a count of those groups
   count: Int
+
+  averageLength: Float
 }
 
 type Measure {
