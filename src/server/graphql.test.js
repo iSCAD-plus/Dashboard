@@ -12,6 +12,7 @@ import graphqlSchema from './schema.graphql';
 mongoose.Promise = Promise;
 mongoose.connect('localhost', 'iscad-gql-test');
 
+console.log(graphqlSchema.substring(0, 1));
 const schema = makeExecutableSchema({
   resolvers,
   typeDefs: [graphqlSchema],
@@ -74,7 +75,7 @@ test('Populated DB returns the correct count', async () => {
 });
 
 test('We can filter decision queries by regime', async () => {
-  const numDecisions = 10;
+  const numDecisions = 30;
   await addDecisions(numDecisions);
 
   const iraqCount = await Decision.find({ regime: 'Iraq' }).count().exec();
@@ -97,7 +98,7 @@ test('We can filter decision queries by regime', async () => {
 });
 
 test('We can filter decisions by regime', async () => {
-  const numDecisions = 20;
+  const numDecisions = 30;
   await addDecisions(numDecisions);
 
   const sudanDecisions = R.map(

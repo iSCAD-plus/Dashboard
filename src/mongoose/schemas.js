@@ -9,6 +9,7 @@ export const plotSchema = new Schema({
     y: required(String),
     seriesKey: String,
   }),
+  types: [String],
 });
 
 export const measureCategories = [

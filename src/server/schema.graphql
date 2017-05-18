@@ -8,7 +8,8 @@ type Mutation {
     query: String!
     x: String!
     y: String!
-    seriesKey: String
+    seriesKey: String,
+    types: [String],
   ): Plot
 }
 
@@ -169,4 +170,5 @@ type Plot {
   name: String!
   query: String!
   axis: Axis!
+  types: [String]!
 }
